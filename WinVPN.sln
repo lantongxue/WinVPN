@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32708.82
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinVPN", "WinVPN\WinVPN.csproj", "{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotRas", "DotRas\src\DotRas\DotRas.csproj", "{645F6DE4-1C28-463F-A96C-5C8102EBA510}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		WIN10-Debug|Any CPU = WIN10-Debug|Any CPU
+		WIN10-Release|Any CPU = WIN10-Release|Any CPU
+		WIN7-Debug|Any CPU = WIN7-Debug|Any CPU
+		WIN7-Release|Any CPU = WIN7-Release|Any CPU
+		WIN8-Debug|Any CPU = WIN8-Debug|Any CPU
+		WIN8-Release|Any CPU = WIN8-Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN10-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN10-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN10-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN10-Release|Any CPU.Build.0 = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN7-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN7-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN7-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN7-Release|Any CPU.Build.0 = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN8-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN8-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN8-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C281C86-BD0C-49C5-BDC7-E5A44A148B9A}.WIN8-Release|Any CPU.Build.0 = Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.Debug|Any CPU.ActiveCfg = WIN7-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.Debug|Any CPU.Build.0 = WIN7-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.Release|Any CPU.ActiveCfg = WIN7-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.Release|Any CPU.Build.0 = WIN7-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN10-Debug|Any CPU.ActiveCfg = WIN10-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN10-Debug|Any CPU.Build.0 = WIN10-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN10-Release|Any CPU.ActiveCfg = WIN10-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN10-Release|Any CPU.Build.0 = WIN10-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN7-Debug|Any CPU.ActiveCfg = WIN7-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN7-Debug|Any CPU.Build.0 = WIN7-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN7-Release|Any CPU.ActiveCfg = WIN7-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN7-Release|Any CPU.Build.0 = WIN7-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN8-Debug|Any CPU.ActiveCfg = WIN8-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN8-Debug|Any CPU.Build.0 = WIN8-Debug|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN8-Release|Any CPU.ActiveCfg = WIN8-Release|Any CPU
+		{645F6DE4-1C28-463F-A96C-5C8102EBA510}.WIN8-Release|Any CPU.Build.0 = WIN8-Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A5870D8-C632-496E-A622-DC0DA4EE0C0C}
+	EndGlobalSection
+EndGlobal
