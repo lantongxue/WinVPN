@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinVPN
+namespace WinVPN.ViewModel
 {
-    internal class RasPhoneBook
+    internal class MainWindowViewModel
     {
-        public string EntryName = "WinVPN";
     }
 }

@@ -18,15 +18,41 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <mah:MetroAnimatedTabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabItems">
+        <mah:MetroAnimatedTabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabItems" x:Name="MainTabControl">
             <TabItem Header="服务器">
                 <TextBlock Text="ssss" />
+            </TabItem>
+            <TabItem Header="设置">
+                <TextBlock Text="rrrr" />
             </TabItem>
             <TabItem Header="路由">
                 <TextBlock Text="rrrr" />
             </TabItem>
-            <TabItem Header="设置">
-                <TextBlock Text="rrrr" />
+            <TabItem Header="插件">
+                <ListView x:Name="PluginListView">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn Header="插件名称"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding PluginName}" />
+                            <GridViewColumn Header="版本" 
+                                            DisplayMemberBinding="{Binding PluginVersion}" />
+                            <GridViewColumn Header="作者"
+                                            DisplayMemberBinding="{Binding PluginAuthor}" />
+                            <GridViewColumn Header="项目主页"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding PluginWebsite}" />
+                            <GridViewColumn Header="启用"
+                                            Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <mah:ToggleSwitch OffContent="" OnContent="" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </TabItem>
         </mah:MetroAnimatedTabControl>
         <StatusBar Grid.Row="1">
@@ -36,8 +62,7 @@
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <Button Content="添加服务器"
-                    ToolTip="添加服务器"
-                    Click="Button_Click"/>
+                    ToolTip="添加服务器"/>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.RightWindowCommands>

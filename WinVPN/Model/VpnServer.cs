@@ -7,7 +7,7 @@ using System.Net.NetworkInformation;
 
 namespace WinVPN.Model
 {
-    internal class VpnServer
+    public class VpnServer
     {
         public string Name { get; set; }
 
@@ -24,6 +24,8 @@ namespace WinVPN.Model
         public long Delay { get; set; }
 
         public VpnProtocol Protocol { get; set; }
+
+        public string Source { get; set; }
 
         public long Ping()
         {
@@ -43,7 +45,7 @@ namespace WinVPN.Model
         }
     }
 
-    internal enum VpnProtocol
+    public enum VpnProtocol
     {
         PPTP,
         L2TP,

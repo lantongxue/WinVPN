@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinVPN.ViewModel
+namespace WinVPN.Plugin
 {
-    internal class MainVM
+    public interface IPlugin
     {
+        
     }
 }
