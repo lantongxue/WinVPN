@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using WinVPN.Plugin;
 using System.Collections;
 using WinVPN.Plugin.SDK;
-using static System.Net.WebRequestMethods;
 
 namespace WinVPN.Service
 {
@@ -19,7 +18,6 @@ namespace WinVPN.Service
 
         List<TabItem> _tabitems = new List<TabItem>();
 
-        //List<object> _plugins = new List<object>();
         Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
 
         public PluginService()
@@ -46,7 +44,6 @@ namespace WinVPN.Service
                 {
                     continue;
                 }
-
                 this.LoadPlugin(file.FullName);
             }
         }
@@ -56,7 +53,7 @@ namespace WinVPN.Service
             Assembly plugin = Assembly.LoadFile(pluginPath);
             foreach (Type exp in plugin.ExportedTypes)
             {
-                if (exp.BaseType.FullName == "WinVPN.Plugin.SDK.WinVPNPlugin" && exp.GetInterface("WinVPN.Plugin.SDK.IPlugin") != null)
+                if (exp.BaseType == typeof(WinVPNPlugin) && exp.GetInterface("WinVPN.Plugin.SDK.IPlugin") != null)
                 {
                     WinVPNPlugin obj = (WinVPNPlugin)plugin.CreateInstance(exp.FullName);
                     obj.IsEnable = true;
@@ -65,7 +62,7 @@ namespace WinVPN.Service
                     if (GetMainWindowTabItems != null)
                     {
                         IEnumerable<TabItem> items = (TabItem[])GetMainWindowTabItems.Invoke(obj, null);
-                        if(items != null)
+                        if (items != null)
                         {
                             foreach (TabItem tab in items)
                             {

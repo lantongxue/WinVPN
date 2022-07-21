@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnGatePlugin", "VpnGatePlu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinVPN.Plugin.SDK", "WinVPN.Plugin.SDK\WinVPN.Plugin.SDK.csproj", "{C703D32D-262A-44F3-8F8A-A3FF2A516295}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,22 @@ Global
 		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Release|Any CPU.Build.0 = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN10-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN10-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN10-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN10-Release|Any CPU.Build.0 = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN7-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN7-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN7-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN7-Release|Any CPU.Build.0 = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN8-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN8-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN8-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{216C7049-C26D-44CD-A0D9-D0308F7B9DEC}.WIN8-Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

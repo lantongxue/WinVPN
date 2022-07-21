@@ -49,6 +49,8 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <mah:ToggleSwitch IsOn="{Binding IsEnable}"
+                                                          Command="{Binding DataContext.PluginEnableCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                          CommandParameter="{Binding }"
                                                           OffContent="禁用"
                                                           OnContent="启用" />
                                     </DataTemplate>

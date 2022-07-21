@@ -11,11 +11,11 @@ namespace VpnGatePlugin
 {
     public class VpnGatePlugin : WinVPNPlugin, IPlugin
     {
-        public string PluginName { get => "VpnGate"; }
-        public string PluginVersion { get => "1.0.0"; }
-        public string PluginAuthor { get => "kali"; }
-        public string PluginWebsite { get => "https://github.com/langtongxue/WinVPN.VpnGate"; }
-        public bool IsSupportSettings { get => true; }
+        public string PluginName => "VpnGate";
+        public string PluginVersion => "1.0.0";
+        public string PluginAuthor => "kali";
+        public string PluginWebsite => "https://github.com/langtongxue/WinVPN.VpnGate";
+        public bool IsSupportSettings => true;
 
         public void Settings()
         {

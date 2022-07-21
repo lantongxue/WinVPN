@@ -15,14 +15,15 @@ namespace WinVPN.ViewModel
 {
     internal class MainWindowViewModel : ObservableObject
     {
-        public ICommand ShowPluginSettingsCommand { get; }
-
         private PluginService pluginService = Ioc.Default.GetRequiredService<PluginService>();
 
         public MainWindowViewModel()
         {
             ShowPluginSettingsCommand = new RelayCommand<IPlugin>(_showPluginSettings);
+            PluginEnableCommand = new RelayCommand<IPlugin>(_pluginEnable);
         }
+
+        public ICommand ShowPluginSettingsCommand { get; }
 
         private void _showPluginSettings(IPlugin plugin)
         {
@@ -32,5 +33,10 @@ namespace WinVPN.ViewModel
         public IEnumerable<IPlugin> Plugins => pluginService.GetPlugins().Values;
 
         public IEnumerable<TabItem> TabItems => pluginService.GetTabItems();
+
+        public ICommand PluginEnableCommand { get; }
+        private void _pluginEnable(IPlugin plugin)
+        {
+        }
     }
 }
