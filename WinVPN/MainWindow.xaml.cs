@@ -13,10 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DotRas;
-using WinVPN.View;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using WinVPN.Service;
+using WinVPN.ViewModel;
 
 namespace WinVPN
 {
@@ -29,15 +28,14 @@ namespace WinVPN
         {
             InitializeComponent();
 
-            RasDialer dialer = new RasDialer();
+            DataContext = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
-            PluginService s = Ioc.Default.GetRequiredService<PluginService>();
             int dIndex = 1;
-            foreach (TabItem tab in s.GetTabItems())
+            foreach (TabItem tab in ViewModel.TabItems)
             {
                 MainTabControl.Items.Insert(dIndex++, tab);
             }
-            PluginListView.ItemsSource = s.GetPlugins();
         }
+        internal MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
     }
 }

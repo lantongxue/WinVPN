@@ -3,25 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using WinVPN.Plugin;
+using WinVPN.Plugin.SDK;
 
 namespace VpnGatePlugin
 {
-    public class VpnGatePlugin : Plugin
+    public class VpnGatePlugin : WinVPNPlugin, IPlugin
     {
-        public override string PluginName { get => "VpnGate"; }
-        public override string PluginVersion { get => "1.0.0"; }
-        public override string PluginAuthor { get => "kali"; }
-        public override string PluginWebsite { get => "https://github.com/langtongxue/WinVPN.VpnGate"; }
-        public override bool IsSupportSettings { get => true; }
+        public string PluginName { get => "VpnGate"; }
+        public string PluginVersion { get => "1.0.0"; }
+        public string PluginAuthor { get => "kali"; }
+        public string PluginWebsite { get => "https://github.com/langtongxue/WinVPN.VpnGate"; }
+        public bool IsSupportSettings { get => true; }
 
-        public override void Settings()
+        public void Settings()
         {
-            throw new NotImplementedException();
+            UserControl2 u2 = new UserControl2();
+            u2.Owner = Application.Current.MainWindow;
+            u2.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            u2.ShowDialog();
         }
 
-        public override IEnumerable<TabItem> GetTabItems()
+        public override IEnumerable<TabItem> GetMainWindowTabItems()
         {
             TabItem tabItem = new TabItem();
             tabItem.Header = "VpnGate";

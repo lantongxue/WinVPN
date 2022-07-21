@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using WinVPN.Service;
+using WinVPN.ViewModel;
 
 namespace WinVPN
 {
@@ -20,10 +21,12 @@ namespace WinVPN
         {
             base.OnStartup(e);
 
-            ServiceCollection s = new ServiceCollection();
-            s.AddSingleton<PluginService>();
+            IServiceProvider s = new ServiceCollection()
+                .AddSingleton<PluginService>()
+                .AddTransient<MainWindowViewModel>()
+                .BuildServiceProvider();
 
-            Ioc.Default.ConfigureServices(s.BuildServiceProvider());
+            Ioc.Default.ConfigureServices(s);
         }
     }
 }

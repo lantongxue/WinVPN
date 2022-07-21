@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinVPN", "WinVPN\WinVPN.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnGatePlugin", "VpnGatePlugin\VpnGatePlugin.csproj", "{B1C7645F-AA76-41C5-B15F-A5EA9B6C6E4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinVPN.Plugin.SDK", "WinVPN.Plugin.SDK\WinVPN.Plugin.SDK.csproj", "{C703D32D-262A-44F3-8F8A-A3FF2A516295}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,22 @@ Global
 		{B1C7645F-AA76-41C5-B15F-A5EA9B6C6E4C}.WIN8-Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1C7645F-AA76-41C5-B15F-A5EA9B6C6E4C}.WIN8-Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1C7645F-AA76-41C5-B15F-A5EA9B6C6E4C}.WIN8-Release|Any CPU.Build.0 = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN10-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN10-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN10-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN10-Release|Any CPU.Build.0 = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN7-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN7-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN7-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN7-Release|Any CPU.Build.0 = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C703D32D-262A-44F3-8F8A-A3FF2A516295}.WIN8-Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
