@@ -13,6 +13,8 @@ namespace WinVPN.Plugin.SDK
     {
         public bool IsEnable { get; set; }
 
+        public string Name => this.GetType().FullName;
+
         public virtual IEnumerable<TabItem> GetMainWindowTabItems()
         {
             return null;

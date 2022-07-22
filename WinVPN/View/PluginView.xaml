@@ -1,0 +1,50 @@
+﻿<ListView x:Class="WinVPN.View.PluginView"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:local="clr-namespace:WinVPN.View"
+          xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+          mc:Ignorable="d"
+          ItemsSource="{Binding Plugins}"
+          BorderThickness="0">
+
+    <ListView.View>
+        <GridView AllowsColumnReorder="False">
+            <GridViewColumn Header="插件名称"
+                            Width="Auto"
+                            DisplayMemberBinding="{Binding PluginName}" />
+            <GridViewColumn Header="版本"
+                            DisplayMemberBinding="{Binding PluginVersion}" />
+            <GridViewColumn Header="作者"
+                            DisplayMemberBinding="{Binding PluginAuthor}" />
+            <GridViewColumn Header="项目主页"
+                            Width="Auto"
+                            DisplayMemberBinding="{Binding PluginWebsite}" />
+            <GridViewColumn Header="启用"
+                            Width="Auto">
+                <GridViewColumn.CellTemplate>
+                    <DataTemplate>
+                        <mah:ToggleSwitch IsOn="{Binding IsEnable}"
+                                          Command="{Binding DataContext.PluginEnableCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          CommandParameter="{Binding }"
+                                          OffContent="禁用"
+                                          OnContent="启用" />
+                    </DataTemplate>
+                </GridViewColumn.CellTemplate>
+            </GridViewColumn>
+            <GridViewColumn Header="操作"
+                            Width="Auto">
+                <GridViewColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Content="设置"
+                                Command="{Binding DataContext.ShowPluginSettingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding }"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                IsEnabled="{Binding IsSupportSettings}" />
+                    </DataTemplate>
+                </GridViewColumn.CellTemplate>
+            </GridViewColumn>
+        </GridView>
+    </ListView.View>
+</ListView>

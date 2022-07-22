@@ -16,7 +16,7 @@ namespace WinVPN.Plugin.SDK
         /// <summary>
         /// 插件版本
         /// </summary>
-        string PluginVersion { get; }
+        Version PluginVersion { get; }
 
         /// <summary>
         /// 插件作者
@@ -32,6 +32,11 @@ namespace WinVPN.Plugin.SDK
         /// 是否支持附加设置
         /// </summary>
         bool IsSupportSettings { get; }
+
+        /// <summary>
+        /// 最低依赖（主程序）版本
+        /// </summary>
+        Version MiniDependentVersion { get; }
 
         void Settings();
     }
