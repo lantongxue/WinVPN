@@ -80,7 +80,7 @@ namespace WinVPN.ViewModel
 
         public ICommand PluginEnableCommand { get; }
 
-        Version MainVersion = Assembly.GetEntryAssembly().GetName().Version;
+        public Version MainVersion => Assembly.GetEntryAssembly().GetName().Version;
         private void _pluginEnable(IPlugin plugin)
         {
             WinVPNPlugin p = (WinVPNPlugin)plugin;

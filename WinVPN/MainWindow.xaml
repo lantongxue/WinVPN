@@ -36,7 +36,7 @@
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
-            <Button Content="v1.0.0"
+            <Button Content="{Binding MainVersion}"
                     ToolTip="检查更新" />
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>

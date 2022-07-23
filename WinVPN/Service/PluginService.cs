@@ -65,7 +65,8 @@ namespace WinVPN.Service
                     Model.Plugin pluginConfig = configService.GetPlugin(exp.FullName);
                     if(pluginConfig == null)
                     {
-                        configService.AddPlugin(new Model.Plugin(exp.FullName, true));
+                        pluginConfig = new Model.Plugin(exp.FullName, true);
+                        configService.AddPlugin(pluginConfig);
                     }
 
                     WinVPNPlugin obj = (WinVPNPlugin)plugin.CreateInstance(exp.FullName);
