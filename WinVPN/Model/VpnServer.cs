@@ -27,6 +27,8 @@ namespace WinVPN.Model
 
         public string Source { get; set; }
 
+        public long Traffic { get; set; }
+
         public long Ping()
         {
             try

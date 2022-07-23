@@ -24,6 +24,7 @@ namespace WinVPN
             IServiceProvider s = new ServiceCollection()
                 .AddSingleton<PluginService>()
                 .AddSingleton<ConfigService>()
+                .AddSingleton<VpnService>()
                 .AddTransient<MainWindowViewModel>()
                 .BuildServiceProvider();
 

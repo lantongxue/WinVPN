@@ -55,7 +55,8 @@ namespace WinVPN.ViewModel
             {
                 new TabItem()
                 {
-                    Header = "服务器"
+                    Header = "服务器",
+                    Content = new VpnServerView()
                 },
                 new TabItem()
                 {

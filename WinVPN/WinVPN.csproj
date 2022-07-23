@@ -109,9 +109,13 @@
     <Compile Include="Model\WinVPNConfig.cs" />
     <Compile Include="Service\ConfigService.cs" />
     <Compile Include="Service\PluginService.cs" />
+    <Compile Include="Service\VpnService.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="View\PluginView.xaml.cs">
       <DependentUpon>PluginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\VpnServerView.xaml.cs">
+      <DependentUpon>VpnServerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\VpnServerWindow.xaml.cs">
       <DependentUpon>VpnServerWindow.xaml</DependentUpon>
@@ -129,6 +133,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\PluginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\VpnServerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
