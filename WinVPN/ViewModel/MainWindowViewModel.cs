@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WinVPN.Model;
 using WinVPN.Plugin.SDK;
 using WinVPN.Service;
 using WinVPN.View;
@@ -117,5 +118,8 @@ namespace WinVPN.ViewModel
                 }
             }
         }
+
+        private ObservableCollection<VpnServer> _servers = null;
+        public ObservableCollection<VpnServer> Servers => _servers;
     }
 }

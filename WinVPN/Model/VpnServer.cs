@@ -29,6 +29,8 @@ namespace WinVPN.Model
 
         public long Traffic { get; set; }
 
+        public bool IsConnected { get; set; }
+
         public long Ping()
         {
             try
@@ -52,6 +54,8 @@ namespace WinVPN.Model
         PPTP,
         L2TP,
         SSTP,
-        IKEV2
+        IKEV2,
+        OPENVPN,
+        WIREGURAD
     }
 }
