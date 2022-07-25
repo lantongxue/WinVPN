@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace WinVPN.Plugin.SDK
 {
-    public interface IPlugin
+    public interface IWinVPNPlugin
     {
         /// <summary>
         /// 插件名字
@@ -39,5 +42,13 @@ namespace WinVPN.Plugin.SDK
         Version MiniDependentVersion { get; }
 
         void Settings();
+
+        IEnumerable<TabItem> GetMainWindowTabItems();
+
+        IEnumerable<FrameworkElement> GetMainWindowLeftCommands();
+
+        IEnumerable<FrameworkElement> GetMainWindowRightCommands();
+
+        IEnumerable<FrameworkElement> GetMainWindowStatusBarItems();
     }
 }

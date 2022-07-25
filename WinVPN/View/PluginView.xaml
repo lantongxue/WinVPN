@@ -10,22 +10,23 @@
           BorderThickness="0">
 
     <ListView.View>
-        <GridView AllowsColumnReorder="False">
+        <GridView>
             <GridViewColumn Header="插件名称"
                             Width="Auto"
-                            DisplayMemberBinding="{Binding PluginName}" />
+                            DisplayMemberBinding="{Binding WinVPNPlugin.PluginName}" />
             <GridViewColumn Header="版本"
-                            DisplayMemberBinding="{Binding PluginVersion}" />
+                            DisplayMemberBinding="{Binding WinVPNPlugin.PluginVersion}" />
             <GridViewColumn Header="作者"
-                            DisplayMemberBinding="{Binding PluginAuthor}" />
+                            DisplayMemberBinding="{Binding WinVPNPlugin.PluginAuthor}" />
             <GridViewColumn Header="项目主页"
                             Width="Auto"
-                            DisplayMemberBinding="{Binding PluginWebsite}" />
+                            DisplayMemberBinding="{Binding WinVPNPlugin.PluginWebsite}" />
             <GridViewColumn Header="启用"
                             Width="Auto">
                 <GridViewColumn.CellTemplate>
                     <DataTemplate>
-                        <mah:ToggleSwitch IsOn="{Binding IsEnable}"
+                        <mah:ToggleSwitch IsOn="{Binding IsOn}"
+                                          IsEnabled="{Binding IsEnabled}"
                                           Command="{Binding DataContext.PluginEnableCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                           CommandParameter="{Binding }"
                                           OffContent="禁用"
@@ -41,7 +42,7 @@
                                 Command="{Binding DataContext.ShowPluginSettingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 CommandParameter="{Binding }"
                                 Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                IsEnabled="{Binding IsSupportSettings}" />
+                                IsEnabled="{Binding WinVPNPlugin.IsSupportSettings}" />
                     </DataTemplate>
                 </GridViewColumn.CellTemplate>
             </GridViewColumn>

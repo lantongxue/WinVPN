@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using System.Windows.Controls;
-using WinVPN.Plugin;
 using System.Collections;
 using WinVPN.Plugin.SDK;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -19,9 +18,7 @@ namespace WinVPN.Service
     {
         readonly string PluginPath = "plugin";
 
-        List<TabItem> _tabitems = new List<TabItem>();
-
-        Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
+        Dictionary<string, WinVPN_Plugin> _plugins = new Dictionary<string, WinVPN_Plugin>();
 
         ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
 
@@ -60,118 +57,41 @@ namespace WinVPN.Service
             Assembly plugin = Assembly.LoadFile(pluginPath);
             foreach (Type exp in plugin.ExportedTypes)
             {
-                if (exp.BaseType == typeof(WinVPNPlugin) && exp.GetInterface("WinVPN.Plugin.SDK.IPlugin") != null)
+                if (exp.GetInterface("WinVPN.Plugin.SDK.IWinVPNPlugin") != null)
                 {
-                    Model.Plugin pluginConfig = configService.GetPlugin(exp.FullName);
-                    if(pluginConfig == null)
+                    IWinVPNPlugin obj = (IWinVPNPlugin)plugin.CreateInstance(exp.FullName);
+
+                    WinVPN_Plugin _plugin = new WinVPN_Plugin(obj)
                     {
-                        pluginConfig = new Model.Plugin(exp.FullName, true);
-                        configService.AddPlugin(pluginConfig);
+                        Name = exp.FullName,
+                        IsEnabled = MainVersion >= obj.MiniDependentVersion,
+                    };
+                    _plugin.IsOn = _plugin.IsEnabled;
+
+                    bool? isEnabled = configService.GetPlugin(exp.FullName);
+                    if (isEnabled == null)
+                    {
+                        configService.AddPlugin(exp.FullName, _plugin.IsOn);
+                    }
+                    else
+                    {
+                        _plugin.IsOn = isEnabled.Value;
                     }
 
-                    WinVPNPlugin obj = (WinVPNPlugin)plugin.CreateInstance(exp.FullName);
-                    obj.IsEnable = pluginConfig.IsEnabled;
-
-                    IPlugin p = (IPlugin)obj;
-                    if(MainVersion < p.MiniDependentVersion)
-                    {
-                        obj.IsEnable = false;
-                        _plugins.Add(exp.FullName, p);
-                        continue;
-                    }
-                    _plugins.Add(exp.FullName, p);
-                    
-                    if(obj.IsEnable)
-                    {
-                        this._GetMainWindowTabItems(exp, obj);
-                        this._GetMainWindowLeftCommands(exp, obj);
-                        this._GetMainWindowRightCommands(exp, obj);
-                        this._GetMainWindowStatusBarItems(exp, obj);
-                    }
+                    _plugins.Add(exp.FullName, _plugin);
                     break;
                 }
             }
             configService.Save();
         }
 
-        public void UpdatePluginConfig(WinVPNPlugin plugin)
+        public void UpdatePluginConfig(WinVPN_Plugin plugin)
         {
-            Model.Plugin p = configService.GetPlugin(plugin.Name);
-            p.IsEnabled = plugin.IsEnable;
+            configService.SetPlugin(plugin.Name, plugin.IsOn);
             configService.Save();
         }
 
-        private void _GetMainWindowTabItems(Type type, object obj)
-        {
-            MethodInfo GetMainWindowTabItems = type.GetMethod("GetMainWindowTabItems");
-            if (GetMainWindowTabItems != null)
-            {
-                IEnumerable<TabItem> items = (TabItem[])GetMainWindowTabItems.Invoke(obj, null);
-                if (items != null)
-                {
-                    foreach (TabItem tab in items)
-                    {
-                        tab.Tag = type.FullName;
-                    }
-                    _tabitems.AddRange(items);
-                }
-            }
-        }
-
-        private void _GetMainWindowLeftCommands(Type type, object obj)
-        {
-            MethodInfo GetMainWindowLeftCommands = type.GetMethod("GetMainWindowLeftCommands");
-            if (GetMainWindowLeftCommands != null)
-            {
-                IEnumerable<FrameworkElement> items = (FrameworkElement[])GetMainWindowLeftCommands.Invoke(obj, null);
-                if (items != null)
-                {
-                    foreach (FrameworkElement tab in items)
-                    {
-                        tab.Tag = type.FullName;
-                    }
-                }
-            }
-        }
-
-        private void _GetMainWindowRightCommands(Type type, object obj)
-        {
-            MethodInfo GetMainWindowRightCommands = type.GetMethod("GetMainWindowRightCommands");
-            if (GetMainWindowRightCommands != null)
-            {
-                IEnumerable<FrameworkElement> items = (FrameworkElement[])GetMainWindowRightCommands.Invoke(obj, null);
-                if (items != null)
-                {
-                    foreach (FrameworkElement tab in items)
-                    {
-                        tab.Tag = type.FullName;
-                    }
-                }
-            }
-        }
-
-        private void _GetMainWindowStatusBarItems(Type type, object obj)
-        {
-            MethodInfo _GetMainWindowStatusBarItems = type.GetMethod("_GetMainWindowStatusBarItems");
-            if (_GetMainWindowStatusBarItems != null)
-            {
-                IEnumerable<StatusBarItem> items = (StatusBarItem[])_GetMainWindowStatusBarItems.Invoke(obj, null);
-                if (items != null)
-                {
-                    foreach (StatusBarItem tab in items)
-                    {
-                        tab.Tag = type.FullName;
-                    }
-                }
-            }
-        }
-
-        public List<TabItem> GetTabItems()
-        {
-            return _tabitems;
-        }
-
-        public Dictionary<string, IPlugin> GetPlugins()
+        public Dictionary<string, WinVPN_Plugin> GetPlugins()
         {
             return _plugins;
         }

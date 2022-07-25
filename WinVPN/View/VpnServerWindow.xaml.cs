@@ -24,5 +24,12 @@ namespace WinVPN.View
         {
             InitializeComponent();
         }
+
+        public VpnServerWindow(string title)
+        {
+            InitializeComponent();
+
+            this.Title = title;
+        }
     }
 }

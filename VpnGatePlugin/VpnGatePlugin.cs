@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using WinVPN.Plugin.SDK;
 
 namespace VpnGatePlugin
 {
-    public class VpnGatePlugin : WinVPNPlugin, IPlugin
+    public class VpnGatePlugin : IWinVPNPlugin
     {
         public string PluginName => "VpnGate";
         public Version PluginVersion => new Version("1.0.0");
@@ -27,13 +28,51 @@ namespace VpnGatePlugin
             u2.ShowDialog();
         }
 
-        public override IEnumerable<TabItem> GetMainWindowTabItems()
+        public IEnumerable<TabItem> GetMainWindowTabItems()
         {
             TabItem tabItem = new TabItem();
             tabItem.Header = "VpnGate";
             tabItem.Content = new UserControl1();
 
             return new TabItem[] { tabItem };
+        }
+
+        public IEnumerable<FrameworkElement> GetMainWindowLeftCommands()
+        {
+            return new List<FrameworkElement>()
+            {
+                new Button()
+                {
+                    Content = "VpnGate"
+                }
+            };
+        }
+
+        public IEnumerable<FrameworkElement> GetMainWindowRightCommands()
+        {
+            return new List<FrameworkElement>()
+            {
+                new Button()
+                {
+                    Content = "VpnGate"
+                }
+            };
+        }
+
+        public IEnumerable<FrameworkElement> GetMainWindowStatusBarItems()
+        {
+            return new List<FrameworkElement>()
+            {
+                new StatusBarItem()
+                {
+                    Content = "VpnGate"
+                },
+                new Separator(),
+                new StatusBarItem()
+                {
+                    Content = "Check"
+                }
+            };
         }
     }
 }

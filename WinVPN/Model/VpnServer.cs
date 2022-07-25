@@ -7,13 +7,14 @@ using System.Net.NetworkInformation;
 
 namespace WinVPN.Model
 {
+    [Serializable]
     public class VpnServer
     {
+        public string Id { get; } = Guid.NewGuid().ToString();
+
         public string Name { get; set; }
 
         public string Address { get; set; }
-
-        public string PreSharedKey { get; set; }
 
         public string Username { get; set; }
 
@@ -31,12 +32,17 @@ namespace WinVPN.Model
 
         public bool IsConnected { get; set; }
 
-        public long Ping()
+        public VpnServer()
+        {
+
+        }
+
+        public async Task<long> PingAsync()
         {
             try
             {
                 Ping ping = new Ping();
-                PingReply reply = ping.Send(this.Address);
+                PingReply reply = await ping.SendPingAsync(this.Address);
                 this.Delay = reply.RoundtripTime;
                 ping.Dispose();
             }
@@ -54,8 +60,8 @@ namespace WinVPN.Model
         PPTP,
         L2TP,
         SSTP,
-        IKEV2,
-        OPENVPN,
-        WIREGURAD
+        IKEv2,
+        WireGuard,
+        OpenVPN
     }
 }

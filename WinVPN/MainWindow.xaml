@@ -24,20 +24,13 @@
                                      SelectedIndex="0"
                                      mah:TabControlHelper.Underlined="TabItems">
         </mah:MetroAnimatedTabControl>
-        <StatusBar Grid.Row="1">
-            <StatusBarItem Content="xx" />
-        </StatusBar>
+        <StatusBar Grid.Row="1"
+                   ItemsSource="{Binding StatusBarItems}" />
     </Grid>
     <mah:MetroWindow.LeftWindowCommands>
-        <mah:WindowCommands>
-            <Button Content="添加服务器"
-                    ToolTip="添加服务器" />
-        </mah:WindowCommands>
+        <mah:WindowCommands ItemsSource="{Binding LeftCommands}" />
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands>
-            <Button Content="{Binding MainVersion}"
-                    ToolTip="检查更新" />
-        </mah:WindowCommands>
+        <mah:WindowCommands ItemsSource="{Binding RightCommands}" />
     </mah:MetroWindow.RightWindowCommands>
 </mah:MetroWindow>

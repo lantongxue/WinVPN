@@ -3,44 +3,59 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tomlyn.Model;
-using Tomlyn;
 using System.IO;
 using WinVPN.Model;
-using System.Xml.Linq;
+using System.Xml;
 
 namespace WinVPN.Service
 {
     internal class ConfigService
     {
-        WinVPNConfig model = null;
-
-        string config = "WinVPN.toml";
-
+        string config = "WinVPN.config";
+        XmlDocument xmlDoc = new XmlDocument();
+        XmlElement plugins = null;
         public ConfigService()
         {
-            string toml = File.ReadAllText(config);
-            model = Toml.ToModel<WinVPNConfig>(toml);
+            xmlDoc.Load(config);
+            plugins = xmlDoc.DocumentElement["plugins"];
+            if(plugins == null)
+            {
+                plugins = xmlDoc.CreateElement("plugins");
+                xmlDoc.DocumentElement.AppendChild(plugins);
+            }
         }
 
-        public void AddPlugin(Model.Plugin plugin)
+        public bool? GetPlugin(string pluginName)
         {
-            if(this.GetPlugin(plugin.Name) != null)
+            XmlElement p = plugins[pluginName];
+            if(p == null)
             {
+                return null;
+            }
+            return bool.Parse(p.Attributes["IsEnable"].Value);
+        }
+
+        public void SetPlugin(string pluginName, bool isEnabled)
+        {
+            XmlElement xmlNode = plugins[pluginName];
+            if(xmlNode == null)
+            {
+                this.AddPlugin(pluginName, isEnabled);
                 return;
             }
-            model.Plugins.Add(plugin);
+            xmlNode.SetAttribute("IsEnable", isEnabled.ToString());
         }
 
-        public Model.Plugin GetPlugin(string name)
+        public void AddPlugin(string pluginName, bool isEnabled)
         {
-            return model.Plugins.Where(x => x.Name == name).FirstOrDefault();
+            XmlElement xmlNode = xmlDoc.CreateElement(pluginName);
+            xmlNode.SetAttribute("IsEnable", isEnabled.ToString());
+            plugins.AppendChild(xmlNode);
         }
 
         public void Save()
         {
-            string toml = Toml.FromModel(model);
-            File.WriteAllText(config, toml);
+            xmlDoc.Save(config);
         }
     }
 }
