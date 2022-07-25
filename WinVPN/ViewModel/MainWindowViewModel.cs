@@ -60,13 +60,13 @@ namespace WinVPN.ViewModel
             PluginEnableCommand = new RelayCommand<WinVPN_Plugin>(_pluginEnable);
             NewVpnServerCommand = new RelayCommand(_newVpnServer);
 
-            this.InitPluginUIItems();
+            _initPluginUIItems();
         }
 
         /// <summary>
         /// 初始化插件对主程序UI的扩展项
         /// </summary>
-        private void InitPluginUIItems()
+        private void _initPluginUIItems()
         {
             _tabItems = new ObservableCollection<TabItem>()
             {
@@ -114,34 +114,86 @@ namespace WinVPN.ViewModel
                 new StatusBarItem()
                 {
                     Content = "WinVPN",
-                },
-                new Separator()
+                }
             };
 
-            int dIndex = 1;
             foreach (WinVPN_Plugin plugin in Plugins)
             {
                 if(plugin.IsOn)
                 {
-                    foreach (TabItem tabitem in plugin.TabItems)
-                    {
-                        _tabItems.Insert(dIndex++, tabitem);
-                    }
+                    _createPluginUIItems(plugin);
+                }
+            }
+        }
 
-                    foreach (FrameworkElement lc in plugin.LeftCommands)
-                    {
-                        _leftCommands.Add(lc);
-                    }
+        /// <summary>
+        /// 创建由插件附加的UI元素
+        /// </summary>
+        /// <param name="plugin"></param>
+        private void _createPluginUIItems(WinVPN_Plugin plugin)
+        {
+            int dIndex = 1;
+            foreach (TabItem tabitem in plugin.TabItems)
+            {
+                _tabItems.Insert(dIndex++, tabitem);
+            }
 
-                    foreach (FrameworkElement rc in plugin.RightCommands)
-                    {
-                        _rightCommands.Add(rc);
-                    }
+            foreach (FrameworkElement lc in plugin.LeftCommands)
+            {
+                _leftCommands.Add(lc);
+            }
 
-                    foreach (FrameworkElement sbi in plugin.StatusBarItems)
-                    {
-                        _statusBarItems.Add(sbi);
-                    }
+            foreach (FrameworkElement rc in plugin.RightCommands)
+            {
+                _rightCommands.Add(rc);
+            }
+
+            foreach (FrameworkElement sbi in plugin.StatusBarItems)
+            {
+                _statusBarItems.Add(sbi);
+            }
+        }
+
+        /// <summary>
+        /// 移除由插件创建的UI元素
+        /// </summary>
+        /// <param name="plugin"></param>
+        private void _removePluginUIItems(WinVPN_Plugin plugin)
+        {
+            // 所有元素采用倒序遍历进行删除，因为正常删除一个元素后，会导致集合中的索引发生变化
+            for (int i = _tabItems.Count - 1; i >= 0; i--)
+            {
+                TabItem tabItem = _tabItems[i];
+                if (tabItem.Tag != null && tabItem.Tag == plugin)
+                {
+                    _tabItems.Remove(tabItem);
+                }
+            }
+
+            for (int i = _leftCommands.Count - 1; i >= 0; i--)
+            {
+                FrameworkElement lc = _leftCommands[i];
+                if (lc.Tag != null && lc.Tag == plugin)
+                {
+                    _leftCommands.Remove(lc);
+                }
+            }
+
+            for (int i = _rightCommands.Count - 1; i >= 0; i--)
+            {
+                FrameworkElement rc = _rightCommands[i];
+                if (rc.Tag != null && rc.Tag == plugin)
+                {
+                    _rightCommands.Remove(rc);
+                }
+            }
+
+            for (int i = _statusBarItems.Count - 1; i >= 0; i--)
+            {
+                FrameworkElement sbi = _statusBarItems[i];
+                if (sbi.Tag != null && sbi.Tag == plugin)
+                {
+                    _statusBarItems.Remove(sbi);
                 }
             }
         }
@@ -164,22 +216,11 @@ namespace WinVPN.ViewModel
 
             if (!plugin.IsOn)
             {
-                for (int i = 0; i < _tabItems.Count; i++)
-                {
-                    TabItem tabItem = _tabItems[i];
-                    if (tabItem.Tag != null && tabItem.Tag == plugin)
-                    {
-                        _tabItems.Remove(tabItem);
-                    }
-                }
+                _removePluginUIItems(plugin);
             }
             else
             {
-                int dIndex = 1;
-                foreach (TabItem tab in plugin.TabItems)
-                {
-                    _tabItems.Insert(dIndex++, tab);
-                }
+                _createPluginUIItems(plugin);
             }
         }
 
