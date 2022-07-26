@@ -26,6 +26,7 @@ namespace WinVPN
                 .AddSingleton<ConfigService>()
                 .AddSingleton<VpnService>()
                 .AddTransient<MainWindowViewModel>()
+                .AddTransient<VpnServerWindowViewModel>()
                 .BuildServiceProvider();
 
             Ioc.Default.ConfigureServices(s);

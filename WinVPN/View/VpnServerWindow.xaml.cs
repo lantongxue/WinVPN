@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WinVPN.Model;
+using WinVPN.ViewModel;
 
 namespace WinVPN.View
 {
@@ -23,6 +26,7 @@ namespace WinVPN.View
         public VpnServerWindow()
         {
             InitializeComponent();
+            DataContext = Ioc.Default.GetRequiredService<VpnServerWindowViewModel>();
         }
 
         public VpnServerWindow(string title)
@@ -30,6 +34,31 @@ namespace WinVPN.View
             InitializeComponent();
 
             this.Title = title;
+            DataContext = Ioc.Default.GetRequiredService<VpnServerWindowViewModel>();
+        }
+
+        internal VpnServerWindowViewModel ViewModel => (VpnServerWindowViewModel)DataContext;
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            VpnProtocol val = (VpnProtocol)(sender as ComboBox).SelectedValue;
+            switch (val)
+            {
+                case VpnProtocol.PPTP:
+                case VpnProtocol.SSTP:
+                case VpnProtocol.IKEv2:
+                    contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
+                    break;
+                case VpnProtocol.L2TP:
+                    contentControl.Content = new L2TP_EditView();
+                    break;
+                case VpnProtocol.OpenVPN:
+                    contentControl.Content = new OpenVPN_EditView();
+                    break;
+                case VpnProtocol.WireGuard:
+                    contentControl.Content = new WireGuardEditView();
+                    break;
+            }
         }
     }
 }

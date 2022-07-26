@@ -102,6 +102,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\VpnServerWindowViewModel.cs" />
+    <Compile Include="View\L2TP_EditView.xaml.cs">
+      <DependentUpon>L2TP_EditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OpenVPN_EditView.xaml.cs">
+      <DependentUpon>OpenVPN_EditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PPTP_SSTP_IKEv2_EditView.xaml.cs">
+      <DependentUpon>PPTP_SSTP_IKEv2_EditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WireGuardEditView.xaml.cs">
+      <DependentUpon>WireGuardEditView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinVPN_Plugin.cs" />
     <Compile Include="Model\VPN\IKEv2.cs" />
     <Compile Include="Model\VPN\L2TP.cs" />
@@ -134,7 +147,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\L2TP_EditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OpenVPN_EditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\PluginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PPTP_SSTP_IKEv2_EditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\VpnServerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WireGuardEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

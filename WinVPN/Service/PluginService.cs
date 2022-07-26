@@ -54,35 +54,42 @@ namespace WinVPN.Service
 
         public void LoadPlugin(string pluginPath)
         {
-            Assembly plugin = Assembly.LoadFile(pluginPath);
-            foreach (Type exp in plugin.ExportedTypes)
+            try
             {
-                if (exp.GetInterface("WinVPN.Plugin.SDK.IWinVPNPlugin") != null)
+                Assembly plugin = Assembly.LoadFile(pluginPath);
+                foreach (Type exp in plugin.ExportedTypes)
                 {
-                    IWinVPNPlugin obj = (IWinVPNPlugin)plugin.CreateInstance(exp.FullName);
-
-                    WinVPN_Plugin _plugin = new WinVPN_Plugin(obj)
+                    if (exp.GetInterface("WinVPN.Plugin.SDK.IWinVPNPlugin") != null)
                     {
-                        Name = exp.FullName,
-                        IsEnabled = MainVersion >= obj.MiniDependentVersion,
-                    };
-                    _plugin.IsOn = _plugin.IsEnabled;
+                        IWinVPNPlugin obj = (IWinVPNPlugin)plugin.CreateInstance(exp.FullName);
 
-                    bool? isEnabled = configService.GetPlugin(exp.FullName);
-                    if (isEnabled == null)
-                    {
-                        configService.AddPlugin(exp.FullName, _plugin.IsOn);
+                        WinVPN_Plugin _plugin = new WinVPN_Plugin(obj)
+                        {
+                            Name = exp.FullName,
+                            IsEnabled = MainVersion >= obj.MiniDependentVersion,
+                        };
+                        _plugin.IsOn = _plugin.IsEnabled;
+
+                        bool? isEnabled = configService.GetPlugin(exp.FullName);
+                        if (isEnabled == null)
+                        {
+                            configService.AddPlugin(exp.FullName, _plugin.IsOn);
+                        }
+                        else
+                        {
+                            _plugin.IsOn = isEnabled.Value;
+                        }
+
+                        _plugins.Add(exp.FullName, _plugin);
+                        break;
                     }
-                    else
-                    {
-                        _plugin.IsOn = isEnabled.Value;
-                    }
-
-                    _plugins.Add(exp.FullName, _plugin);
-                    break;
                 }
+                configService.Save();
             }
-            configService.Save();
+            catch
+            {
+
+            }
         }
 
         public void UpdatePluginConfig(WinVPN_Plugin plugin)
