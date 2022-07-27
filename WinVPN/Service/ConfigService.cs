@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 using System.IO;
 using WinVPN.Model;
 using System.Xml;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
+using WinVPN.Model.VPN;
+using Newtonsoft.Json.Linq;
 
 namespace WinVPN.Service
 {
@@ -14,6 +20,7 @@ namespace WinVPN.Service
         string config = "WinVPN.config";
         XmlDocument xmlDoc = new XmlDocument();
         XmlElement plugins = null;
+        XmlElement servers = null;
         public ConfigService()
         {
             xmlDoc.Load(config);
@@ -22,6 +29,12 @@ namespace WinVPN.Service
             {
                 plugins = xmlDoc.CreateElement("plugins");
                 xmlDoc.DocumentElement.AppendChild(plugins);
+            }
+            servers = xmlDoc.DocumentElement["servers"];
+            if(servers == null)
+            {
+                servers = xmlDoc.CreateElement("servers");
+                xmlDoc.DocumentElement.AppendChild(servers);
             }
         }
 
@@ -51,6 +64,80 @@ namespace WinVPN.Service
             XmlElement xmlNode = xmlDoc.CreateElement(pluginName);
             xmlNode.SetAttribute("IsEnable", isEnabled.ToString());
             plugins.AppendChild(xmlNode);
+        }
+
+        public VpnServer GetServer(string id)
+        {
+            id = "WV" + id;
+            XmlElement p = servers[id];
+            if (p == null)
+            {
+                return null;
+            }
+
+            byte[] buff = Convert.FromBase64String(p.InnerText);
+            using (MemoryStream ms = new MemoryStream(buff))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                VpnServer server = (VpnServer)formatter.Deserialize(ms);
+                return server;
+            }
+        }
+
+        public void AddServer(VpnServer server)
+        {
+            XmlElement xmlNode = xmlDoc.CreateElement(server.Id);
+            string json = JsonConvert.SerializeObject(server);
+            xmlNode.InnerText = json;
+            servers.AppendChild(xmlNode);
+        }
+
+        public IEnumerable<VpnServer> GetServers()
+        {
+            List<VpnServer> list = new List<VpnServer>();
+            foreach(XmlNode node in servers.ChildNodes)
+            {
+                JObject jb = JsonConvert.DeserializeObject<JObject>(node.InnerText);
+                VpnProtocol protocol = (VpnProtocol)Enum.Parse(typeof(VpnProtocol), jb.GetValue("Protocol").Value<string>());
+                dynamic server = null;
+                switch (protocol)
+                {
+                    case VpnProtocol.PPTP:
+                        server = new PPTP();
+                        break;
+                    case VpnProtocol.L2TP:
+                        server = new L2TP();
+                        server.PreSharedKey = jb["PreSharedKey"].Value<string>();
+                        break;
+                    case VpnProtocol.SSTP:
+                        server = new SSTP();
+                        break;
+                    case VpnProtocol.IKEv2:
+                        server = new IKEv2();
+                        break;
+                    case VpnProtocol.WireGuard:
+                        server = new WireGuard();
+                        break;
+                }
+                if(server == null)
+                {
+                    server = new VpnServer();
+                    server.Protocol = protocol;
+                }
+                server.Id = jb["Id"].Value<string>();
+                server.Name = jb["Name"].Value<string>();
+                server.Address = jb["Address"].Value<string>();
+                server.Username = jb["Username"].Value<string>();
+                server.Password = jb["Password"].Value<string>();
+                server.Info = jb["Info"].Value<string>();
+                server.Delay = jb["Delay"].Value<long>();
+                server.Source = jb["Source"].Value<string>();
+                server.Traffic = jb["Traffic"].Value<long>();
+
+                list.Add(server);
+
+            }
+            return list;
         }
 
         public void Save()

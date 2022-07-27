@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WinVPN.Model;
 using WinVPN.Model.VPN;
+using WinVPN.Service;
 using WinVPN.ViewModel;
 
 namespace WinVPN.View
@@ -40,56 +42,58 @@ namespace WinVPN.View
 
         internal VpnServerWindowViewModel ViewModel => (VpnServerWindowViewModel)DataContext;
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
+
+        private void Protocol_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             VpnProtocol val = (VpnProtocol)(sender as ComboBox).SelectedValue;
-            VpnServer server = new VpnServer()
-            {
-                Protocol = val
-            };
-            if (ViewModel.Server != null)
-            {
-                server.Name = ViewModel.Server.Name;
-                server.Address = ViewModel.Server.Address;
-                server.Username = ViewModel.Server.Username;
-                server.Password = ViewModel.Server.Password;
-                server.Info = ViewModel.Server.Info;
-            }
             switch (val)
             {
                 case VpnProtocol.PPTP:
-                    ViewModel.Server = server;
+                    ViewModel.Server = new PPTP();
                     contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
                     break;
                 case VpnProtocol.SSTP:
-                    ViewModel.Server = server;
+                    ViewModel.Server = new SSTP();
                     contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
                     break;
                 case VpnProtocol.IKEv2:
-                    ViewModel.Server = server;
+                    ViewModel.Server = new IKEv2();
                     contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
                     break;
                 case VpnProtocol.L2TP:
-                    ViewModel.Server = new L2TP()
-                    {
-                        Name = server.Name,
-                        Address = server.Address,
-                        Username = server.Username,
-                        Password = server.Password,
-                        Info = server.Info
-                    };
+                    ViewModel.Server = new L2TP();
                     contentControl.Content = new L2TP_EditView();
                     break;
                 case VpnProtocol.OpenVPN:
                     contentControl.Content = new OpenVPN_EditView();
                     break;
                 case VpnProtocol.WireGuard:
-                    server.Username = string.Empty;
-                    server.Password = string.Empty;
-                    ViewModel.Server = server;
+                    ViewModel.Server = new WireGuard();
                     contentControl.Content = new WireGuardEditView();
                     break;
             }
+        }
+
+        private async void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var server = ViewModel.Server;
+            if(server.Name == string.Empty)
+            {
+                await this.ShowMessageAsync("提示", "名称不能为空");
+                return;
+            }
+            if (server.Address == string.Empty)
+            {
+                await this.ShowMessageAsync("提示", "服务器地址不能为空");
+                return;
+            }
+            server.Source = "UserCreate";
+
+            configService.AddServer(server);
+            configService.Save();
+
+            this.Close();
         }
     }
 }

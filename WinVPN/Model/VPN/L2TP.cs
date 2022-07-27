@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace WinVPN.Model.VPN
 {
-    [Serializable]
     internal class L2TP : VpnServer
     {
+        private string preSharedKey = "";
+
         public override VpnProtocol Protocol { get; set; } = VpnProtocol.L2TP;
-        public string PreSharedKey { get; set; }
+        public string PreSharedKey 
+        { 
+            get => preSharedKey; 
+            set => SetProperty(ref preSharedKey, value); 
+        }
     }
 }

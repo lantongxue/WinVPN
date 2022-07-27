@@ -21,6 +21,7 @@ namespace WinVPN.ViewModel
     internal class MainWindowViewModel : ObservableObject
     {
         private PluginService pluginService = Ioc.Default.GetRequiredService<PluginService>();
+        private ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
 
         public ICommand ShowPluginSettingsCommand { get; }
 
@@ -54,11 +55,16 @@ namespace WinVPN.ViewModel
 
         public ICommand NewVpnServerCommand { get; }
 
+        public IAsyncRelayCommand ConnectAsyncCommand { get; }
+
         public MainWindowViewModel()
         {
             ShowPluginSettingsCommand = new RelayCommand<WinVPN_Plugin>(_showPluginSettings);
             PluginEnableCommand = new RelayCommand<WinVPN_Plugin>(_pluginEnable);
             NewVpnServerCommand = new RelayCommand(_newVpnServer);
+            ConnectAsyncCommand = new AsyncRelayCommand<VpnServer>(_connectVpnServer);
+
+            _servers = new ObservableCollection<VpnServer>(configService.GetServers());
 
             _initPluginUIItems();
         }
@@ -230,6 +236,11 @@ namespace WinVPN.ViewModel
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.ShowDialog();
+        }
+
+        private async Task _connectVpnServer(VpnServer server)
+        {
+            await server.PingAsync();
         }
     }
 }

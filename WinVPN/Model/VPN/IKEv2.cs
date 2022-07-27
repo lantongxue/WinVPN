@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WinVPN.Model.VPN
 {
-    [Serializable]
     internal class IKEv2 : VpnServer
     {
         public override VpnProtocol Protocol { get; set; } = VpnProtocol.IKEv2;
