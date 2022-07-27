@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using WinVPN.Model.VPN;
 using Newtonsoft.Json.Linq;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace WinVPN.Service
 {
@@ -21,6 +22,7 @@ namespace WinVPN.Service
         XmlDocument xmlDoc = new XmlDocument();
         XmlElement plugins = null;
         XmlElement servers = null;
+
         public ConfigService()
         {
             xmlDoc.Load(config);
@@ -88,7 +90,7 @@ namespace WinVPN.Service
         {
             XmlElement xmlNode = xmlDoc.CreateElement(server.Id);
             string json = JsonConvert.SerializeObject(server);
-            xmlNode.InnerText = json;
+            xmlNode.InnerText = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
             servers.AppendChild(xmlNode);
         }
 
@@ -97,7 +99,7 @@ namespace WinVPN.Service
             List<VpnServer> list = new List<VpnServer>();
             foreach(XmlNode node in servers.ChildNodes)
             {
-                JObject jb = JsonConvert.DeserializeObject<JObject>(node.InnerText);
+                JObject jb = JsonConvert.DeserializeObject<JObject>(Encoding.UTF8.GetString(Convert.FromBase64String(node.InnerText)));
                 VpnProtocol protocol = (VpnProtocol)Enum.Parse(typeof(VpnProtocol), jb.GetValue("Protocol").Value<string>());
                 dynamic server = null;
                 switch (protocol)

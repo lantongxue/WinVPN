@@ -32,6 +32,8 @@ namespace WinVPN.View
             DataContext = Ioc.Default.GetRequiredService<VpnServerWindowViewModel>();
         }
 
+        MainWindowViewModel MainWindowViewModel = Ioc.Default.GetRequiredService<MainWindowViewModel>();
+
         public VpnServerWindow(string title)
         {
             InitializeComponent();
@@ -92,6 +94,8 @@ namespace WinVPN.View
 
             configService.AddServer(server);
             configService.Save();
+
+            MainWindowViewModel.Servers.Add(server);
 
             this.Close();
         }

@@ -11,8 +11,6 @@
 
     <ListView.View>
         <GridView AllowsColumnReorder="False">
-            <GridViewColumn Header="国家"
-                            Width="50" />
             <GridViewColumn Header="名称"
                             Width="Auto"
                             DisplayMemberBinding="{Binding Name}"/>

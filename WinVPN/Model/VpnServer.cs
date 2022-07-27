@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.NetworkInformation;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.ComponentModel;
-using WinVPN.Model.VPN;
 
 namespace WinVPN.Model
 {
@@ -23,6 +21,7 @@ namespace WinVPN.Model
         private string source = "";
         private long traffic = 0;
         private bool isConnected = false;
+        private string country = "cn";
 
         public string Id 
         { 
@@ -79,6 +78,12 @@ namespace WinVPN.Model
             get => isConnected; 
             set => SetProperty(ref isConnected, value); 
         }
+        public string Country 
+        {
+            get => country; 
+            set => SetProperty<string>(ref country, value);
+        }
+
         public VpnServer()
         {
             this.id = "WV" + Guid.NewGuid().ToString();
