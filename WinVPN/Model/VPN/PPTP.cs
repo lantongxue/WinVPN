@@ -9,5 +9,6 @@ namespace WinVPN.Model.VPN
     [Serializable]
     internal class PPTP : VpnServer
     {
+        public override VpnProtocol Protocol { get; set; } = VpnProtocol.PPTP;
     }
 }

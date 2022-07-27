@@ -12,20 +12,38 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="120" />
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0"
+                 Text="{Binding Server.Name}"
+                 mah:TextBoxHelper.UseFloatingWatermark="True"
+                 mah:TextBoxHelper.ClearTextButton="True"
+                 mah:TextBoxHelper.Watermark="名称" />
+        <TextBox Grid.Row="1"
+                 Margin="0,10,0,0"
+                 Text="{Binding Server.Address}"
                  mah:TextBoxHelper.UseFloatingWatermark="True"
                  mah:TextBoxHelper.ClearTextButton="True"
                  mah:TextBoxHelper.Watermark="服务器地址" />
-        <TextBox Grid.Row="1"
+        <TextBox Grid.Row="2"
                  Margin="0,10,0,0"
+                 Text="{Binding Server.Username}"
                  mah:TextBoxHelper.UseFloatingWatermark="True"
                  mah:TextBoxHelper.ClearTextButton="True"
                  mah:TextBoxHelper.Watermark="账号" />
-        <PasswordBox Grid.Row="2"
+        <PasswordBox Grid.Row="3"
+                     Margin="0,10,0,0"
+                     mah:PasswordBoxBindingBehavior.Password="{Binding Server.Password}"
+                     mah:TextBoxHelper.UseFloatingWatermark="True"
+                     mah:TextBoxHelper.ClearTextButton="True"
+                     mah:TextBoxHelper.Watermark="密码" />
+        <TextBox Grid.Row="4"
                  Margin="0,10,0,0"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Text="{Binding Server.Info}"
                  mah:TextBoxHelper.UseFloatingWatermark="True"
-                 mah:TextBoxHelper.ClearTextButton="True"
-                 mah:TextBoxHelper.Watermark="密码" />
+                 mah:TextBoxHelper.Watermark="备注" />
     </Grid>
 </UserControl>

@@ -9,6 +9,6 @@ namespace WinVPN.Model.VPN
     [Serializable]
     internal class WireGuard : VpnServer
     {
-
+        public override VpnProtocol Protocol { get; set; } = VpnProtocol.WireGuard;
     }
 }

@@ -17,6 +17,8 @@ namespace WinVPN.ViewModel
 
         public VpnProtocol SelectedProtocol { get; set; } = VpnProtocol.PPTP;
 
+        public VpnServer Server { get; set; }
+
 
         public VpnServerWindowViewModel()
         {

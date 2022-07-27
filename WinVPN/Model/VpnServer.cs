@@ -24,7 +24,7 @@ namespace WinVPN.Model
 
         public long Delay { get; set; }
 
-        public VpnProtocol Protocol { get; set; }
+        public virtual VpnProtocol Protocol { get; set; }
 
         public string Source { get; set; }
 
