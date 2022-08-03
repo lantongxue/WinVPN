@@ -9,6 +9,21 @@
           BorderThickness="0"
           ItemsSource="{Binding Servers}">
 
+    <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem"
+               BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
+            <Setter Property="ContextMenu"
+                    Value="{DynamicResource serverListContextMenu}" />
+        </Style>
+    </ListView.ItemContainerStyle>
+    <ListView.Resources>
+        <ContextMenu x:Key="serverListContextMenu">
+            <MenuItem Header="连接" />
+            <Separator />
+            <MenuItem Header="编辑" />
+            <MenuItem Header="删除" />
+        </ContextMenu>
+    </ListView.Resources>
     <ListView.View>
         <GridView AllowsColumnReorder="False">
             <GridViewColumn Header="名称"

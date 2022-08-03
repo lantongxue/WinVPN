@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using WinVPN.Model.VPN;
 using Newtonsoft.Json.Linq;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Xml.Linq;
 
 namespace WinVPN.Service
 {
@@ -68,30 +69,23 @@ namespace WinVPN.Service
             plugins.AppendChild(xmlNode);
         }
 
-        public VpnServer GetServer(string id)
-        {
-            id = "WV" + id;
-            XmlElement p = servers[id];
-            if (p == null)
-            {
-                return null;
-            }
-
-            byte[] buff = Convert.FromBase64String(p.InnerText);
-            using (MemoryStream ms = new MemoryStream(buff))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                VpnServer server = (VpnServer)formatter.Deserialize(ms);
-                return server;
-            }
-        }
-
         public void AddServer(VpnServer server)
         {
             XmlElement xmlNode = xmlDoc.CreateElement(server.Id);
             string json = JsonConvert.SerializeObject(server);
             xmlNode.InnerText = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
             servers.AppendChild(xmlNode);
+        }
+
+        public void UpdateServer(string id, VpnServer server)
+        {
+            XmlNode xmlNode = servers.SelectSingleNode(id);
+            if (xmlNode == null)
+            {
+                return;
+            }
+            string json = JsonConvert.SerializeObject(server);
+            xmlNode.InnerText = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
         }
 
         public IEnumerable<VpnServer> GetServers()
