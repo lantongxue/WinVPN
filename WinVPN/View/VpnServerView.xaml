@@ -18,12 +18,19 @@
     </ListView.ItemContainerStyle>
     <ListView.Resources>
         <ContextMenu x:Key="serverContextMenu">
-            <MenuItem Header="连接" />
+            <MenuItem Header="Ping"
+                      Command="{Binding DataContext.PingAsyncCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                      CommandParameter="{Binding }" />
+            <MenuItem Header="连接"
+                      Command="{Binding DataContext.ConnectAsyncCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                      CommandParameter="{Binding }" />
             <Separator />
             <MenuItem Header="编辑"
                       Command="{Binding DataContext.EditVpnServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                       CommandParameter="{Binding }"/>
-            <MenuItem Header="删除" />
+            <MenuItem Header="删除"
+                      Command="{Binding DataContext.DeleteVpnServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                      CommandParameter="{Binding }" />
         </ContextMenu>
     </ListView.Resources>
     <ListView.View>
@@ -32,22 +39,14 @@
                             Width="100"
                             DisplayMemberBinding="{Binding Name}"/>
             <GridViewColumn Header="服务器地址"
-                            Width="120" 
-                            DisplayMemberBinding="{Binding Address}"/>
+                            Width="120"
+                            DisplayMemberBinding="{Binding Address}" />
             <GridViewColumn Header="协议"
                             Width="80"
                             DisplayMemberBinding="{Binding Protocol}" />
             <GridViewColumn Header="延迟"
-                            Width="50">
-                <GridViewColumn.CellTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Delay}" />
-                            <TextBlock Text="ms" />
-                        </StackPanel>
-                    </DataTemplate>
-                </GridViewColumn.CellTemplate>
-            </GridViewColumn>
+                            Width="50"
+                            DisplayMemberBinding="{Binding Delay}" />
             <GridViewColumn Header="数据流量"
                             Width="80"
                             DisplayMemberBinding="{Binding Traffic}" />

@@ -16,7 +16,7 @@ namespace WinVPN.Model
         private string username = "";
         private string password = "";
         private string info = "";
-        private long delay = -1;
+        private string delay = "";
         private VpnProtocol protocol;
         private string source = "";
         private long traffic = 0;
@@ -53,7 +53,7 @@ namespace WinVPN.Model
             get => info; 
             set => SetProperty(ref info, value); 
         }
-        public long Delay
+        public string Delay
         {
             get => delay;
             set => SetProperty(ref delay, value);
@@ -93,17 +93,18 @@ namespace WinVPN.Model
         {
             try
             {
+                this.Delay = "Ping...";
                 Ping ping = new Ping();
                 PingReply reply = await ping.SendPingAsync(this.Address);
-                this.Delay = reply.RoundtripTime;
+                this.Delay = reply.RoundtripTime + "ms";
                 ping.Dispose();
+                return reply.RoundtripTime;
             }
-            catch
+            catch(Exception ex)
             {
-                this.Delay = -1;
+                this.Delay = ex.Message;
             }
-
-            return this.Delay;
+            return 0;
         }
     }
 

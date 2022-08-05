@@ -81,12 +81,23 @@ namespace WinVPN.Service
             xmlNode.InnerText = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
         }
 
+        public void DeleteServer(string id)
+        {
+            XmlNode xmlNode = servers.SelectSingleNode(id);
+            if (xmlNode == null)
+            {
+                return;
+            }
+            servers.RemoveChild(xmlNode);
+        }
+
         public IEnumerable<VpnServer> GetServers()
         {
             List<VpnServer> list = new List<VpnServer>();
             foreach(XmlNode node in servers.ChildNodes)
             {
                 VpnServer server = JsonConvert.DeserializeObject<VpnServer>(Encoding.UTF8.GetString(Convert.FromBase64String(node.InnerText)));
+                server.Delay = "";
                 list.Add(server);
 
             }

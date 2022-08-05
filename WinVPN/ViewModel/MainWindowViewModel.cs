@@ -57,6 +57,12 @@ namespace WinVPN.ViewModel
 
         public ICommand EditVpnServerCommand { get; }
 
+        public ICommand DeleteVpnServerCommand { get; }
+
+        public IAsyncRelayCommand PingAsyncCommand { get; }
+
+        public IAsyncRelayCommand PingServersAsyncCommand { get; }
+
         public IAsyncRelayCommand ConnectAsyncCommand { get; }
 
         public MainWindowViewModel()
@@ -65,6 +71,9 @@ namespace WinVPN.ViewModel
             PluginEnableCommand = new RelayCommand<WinVPN_Plugin>(_pluginEnable);
             NewVpnServerCommand = new RelayCommand(_newVpnServer);
             EditVpnServerCommand = new RelayCommand<VpnServer>(_editVpnServer);
+            DeleteVpnServerCommand = new RelayCommand<VpnServer>(_deleteVpnServer);
+            PingAsyncCommand = new AsyncRelayCommand<VpnServer>(_pingVpnServer);
+            PingServersAsyncCommand = new AsyncRelayCommand(_pingVpnServers);
             ConnectAsyncCommand = new AsyncRelayCommand<VpnServer>(_connectVpnServer);
 
             _servers = new ObservableCollection<VpnServer>(configService.GetServers());
@@ -106,6 +115,12 @@ namespace WinVPN.ViewModel
                     Content = "添加服务器",
                     ToolTip = "添加服务器",
                     Command = NewVpnServerCommand
+                },
+                new Button()
+                {
+                    Content = "服务器测速",
+                    ToolTip = "服务器测速",
+                    Command = PingServersAsyncCommand
                 }
             };
 
@@ -247,6 +262,26 @@ namespace WinVPN.ViewModel
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.ShowDialog();
+        }
+
+        private void _deleteVpnServer(VpnServer server)
+        {
+            configService.DeleteServer(server.Id);
+            configService.Save();
+            _servers.Remove(server);
+        }
+
+        private async Task _pingVpnServer(VpnServer server)
+        {
+            await server.PingAsync();
+        }
+
+        private async Task _pingVpnServers()
+        {
+            foreach(VpnServer server in _servers)
+            {
+                await server.PingAsync();
+            }
         }
 
         private async Task _connectVpnServer(VpnServer server)
