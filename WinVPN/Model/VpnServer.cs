@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.NetworkInformation;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using DotRas;
+using System.Windows;
 
 namespace WinVPN.Model
 {
@@ -105,6 +107,28 @@ namespace WinVPN.Model
                 this.Delay = ex.Message;
             }
             return 0;
+        }
+
+        public RasVpnStrategy GetRasVpnStrategy()
+        {
+            RasVpnStrategy strategy = RasVpnStrategy.Default;
+
+            switch (this.Protocol)
+            {
+                case VpnProtocol.PPTP:
+                    strategy = RasVpnStrategy.PptpOnly;
+                    break;
+                case VpnProtocol.L2TP:
+                    strategy = RasVpnStrategy.L2tpOnly;
+                    break;
+                case VpnProtocol.SSTP:
+                    strategy = RasVpnStrategy.SstpOnly;
+                    break;
+                case VpnProtocol.IKEv2:
+                    strategy = RasVpnStrategy.IkeV2Only;
+                    break;
+            }
+            return strategy;
         }
     }
 

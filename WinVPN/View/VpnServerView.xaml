@@ -22,6 +22,11 @@
                       Command="{Binding DataContext.PingAsyncCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                       CommandParameter="{Binding }" />
             <MenuItem Header="连接"
+                      mah:VisibilityHelper.IsVisible="{Binding IsConnected, Converter={StaticResource InverseBooleanConverter}}"
+                      Command="{Binding DataContext.ConnectAsyncCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                      CommandParameter="{Binding }" />
+            <MenuItem Header="断开"
+                      mah:VisibilityHelper.IsVisible="{Binding IsConnected}"
                       Command="{Binding DataContext.ConnectAsyncCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                       CommandParameter="{Binding }" />
             <Separator />

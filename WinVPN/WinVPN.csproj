@@ -105,6 +105,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converter\InverseBooleanConverter.cs" />
     <Compile Include="ViewModel\VpnServerWindowViewModel.cs" />
     <Compile Include="View\L2TP_EditView.xaml.cs">
       <DependentUpon>L2TP_EditView.xaml</DependentUpon>

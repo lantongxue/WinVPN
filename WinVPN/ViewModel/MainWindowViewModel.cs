@@ -22,6 +22,7 @@ namespace WinVPN.ViewModel
     {
         private PluginService pluginService = Ioc.Default.GetRequiredService<PluginService>();
         private ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
+        private VpnService vpnService = Ioc.Default.GetRequiredService<VpnService>();
 
         public ICommand ShowPluginSettingsCommand { get; }
 
@@ -286,7 +287,7 @@ namespace WinVPN.ViewModel
 
         private async Task _connectVpnServer(VpnServer server)
         {
-            await server.PingAsync();
+            await vpnService.Connect(server);
         }
     }
 }
