@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using WinVPN.Model;
 using System.Xml;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Web.UI.WebControls;
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using WinVPN.Model.VPN;
-using Newtonsoft.Json.Linq;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using System.Xml.Linq;
 
 namespace WinVPN.Service
 {
@@ -93,43 +86,7 @@ namespace WinVPN.Service
             List<VpnServer> list = new List<VpnServer>();
             foreach(XmlNode node in servers.ChildNodes)
             {
-                JObject jb = JsonConvert.DeserializeObject<JObject>(Encoding.UTF8.GetString(Convert.FromBase64String(node.InnerText)));
-                VpnProtocol protocol = (VpnProtocol)Enum.Parse(typeof(VpnProtocol), jb.GetValue("Protocol").Value<string>());
-                dynamic server = null;
-                switch (protocol)
-                {
-                    case VpnProtocol.PPTP:
-                        server = new PPTP();
-                        break;
-                    case VpnProtocol.L2TP:
-                        server = new L2TP();
-                        server.PreSharedKey = jb["PreSharedKey"].Value<string>();
-                        break;
-                    case VpnProtocol.SSTP:
-                        server = new SSTP();
-                        break;
-                    case VpnProtocol.IKEv2:
-                        server = new IKEv2();
-                        break;
-                    case VpnProtocol.WireGuard:
-                        server = new WireGuard();
-                        break;
-                }
-                if(server == null)
-                {
-                    server = new VpnServer();
-                    server.Protocol = protocol;
-                }
-                server.Id = jb["Id"].Value<string>();
-                server.Name = jb["Name"].Value<string>();
-                server.Address = jb["Address"].Value<string>();
-                server.Username = jb["Username"].Value<string>();
-                server.Password = jb["Password"].Value<string>();
-                server.Info = jb["Info"].Value<string>();
-                server.Delay = jb["Delay"].Value<long>();
-                server.Source = jb["Source"].Value<string>();
-                server.Traffic = jb["Traffic"].Value<long>();
-
+                VpnServer server = JsonConvert.DeserializeObject<VpnServer>(Encoding.UTF8.GetString(Convert.FromBase64String(node.InnerText)));
                 list.Add(server);
 
             }

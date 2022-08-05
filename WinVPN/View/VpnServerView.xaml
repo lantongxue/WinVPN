@@ -13,36 +13,46 @@
         <Style TargetType="ListViewItem"
                BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
             <Setter Property="ContextMenu"
-                    Value="{DynamicResource serverListContextMenu}" />
+                    Value="{DynamicResource serverContextMenu}" />
         </Style>
     </ListView.ItemContainerStyle>
     <ListView.Resources>
-        <ContextMenu x:Key="serverListContextMenu">
+        <ContextMenu x:Key="serverContextMenu">
             <MenuItem Header="连接" />
             <Separator />
-            <MenuItem Header="编辑" />
+            <MenuItem Header="编辑"
+                      Command="{Binding DataContext.EditVpnServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                      CommandParameter="{Binding }"/>
             <MenuItem Header="删除" />
         </ContextMenu>
     </ListView.Resources>
     <ListView.View>
         <GridView AllowsColumnReorder="False">
             <GridViewColumn Header="名称"
-                            Width="Auto"
+                            Width="100"
                             DisplayMemberBinding="{Binding Name}"/>
             <GridViewColumn Header="服务器地址"
-                            Width="Auto" 
+                            Width="120" 
                             DisplayMemberBinding="{Binding Address}"/>
             <GridViewColumn Header="协议"
-                            Width="Auto"
+                            Width="80"
                             DisplayMemberBinding="{Binding Protocol}" />
             <GridViewColumn Header="延迟"
-                            Width="Auto"
-                            DisplayMemberBinding="{Binding Delay}" />
+                            Width="50">
+                <GridViewColumn.CellTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Delay}" />
+                            <TextBlock Text="ms" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GridViewColumn.CellTemplate>
+            </GridViewColumn>
             <GridViewColumn Header="数据流量"
-                            Width="Auto"
+                            Width="80"
                             DisplayMemberBinding="{Binding Traffic}" />
             <GridViewColumn Header="备注"
-                            Width="200"
+                            Width="160"
                             DisplayMemberBinding="{Binding Info}" />
             <GridViewColumn Header="操作"
                             Width="100">

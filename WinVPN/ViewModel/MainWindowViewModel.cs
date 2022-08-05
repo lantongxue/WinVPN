@@ -55,6 +55,8 @@ namespace WinVPN.ViewModel
 
         public ICommand NewVpnServerCommand { get; }
 
+        public ICommand EditVpnServerCommand { get; }
+
         public IAsyncRelayCommand ConnectAsyncCommand { get; }
 
         public MainWindowViewModel()
@@ -62,6 +64,7 @@ namespace WinVPN.ViewModel
             ShowPluginSettingsCommand = new RelayCommand<WinVPN_Plugin>(_showPluginSettings);
             PluginEnableCommand = new RelayCommand<WinVPN_Plugin>(_pluginEnable);
             NewVpnServerCommand = new RelayCommand(_newVpnServer);
+            EditVpnServerCommand = new RelayCommand<VpnServer>(_editVpnServer);
             ConnectAsyncCommand = new AsyncRelayCommand<VpnServer>(_connectVpnServer);
 
             _servers = new ObservableCollection<VpnServer>(configService.GetServers());
@@ -233,6 +236,14 @@ namespace WinVPN.ViewModel
         private void _newVpnServer()
         {
             VpnServerWindow window = new VpnServerWindow("添加服务器");
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.ShowDialog();
+        }
+
+        private void _editVpnServer(VpnServer server)
+        {
+            VpnServerWindow window = new VpnServerWindow("编辑服务器", server);
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.ShowDialog();

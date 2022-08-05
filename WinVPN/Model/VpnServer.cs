@@ -21,7 +21,7 @@ namespace WinVPN.Model
         private string source = "";
         private long traffic = 0;
         private bool isConnected = false;
-        private string country = "cn";
+        private string preSharedKey = "";
 
         public string Id 
         { 
@@ -78,10 +78,10 @@ namespace WinVPN.Model
             get => isConnected; 
             set => SetProperty(ref isConnected, value); 
         }
-        public string Country 
+        public string PreSharedKey
         {
-            get => country; 
-            set => SetProperty<string>(ref country, value);
+            get => preSharedKey;
+            set => SetProperty(ref preSharedKey, value);
         }
 
         public VpnServer()

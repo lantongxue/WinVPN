@@ -119,12 +119,7 @@
       <DependentUpon>WireGuardEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinVPN_Plugin.cs" />
-    <Compile Include="Model\VPN\IKEv2.cs" />
-    <Compile Include="Model\VPN\L2TP.cs" />
-    <Compile Include="Model\VPN\PPTP.cs" />
-    <Compile Include="Model\VPN\SSTP.cs" />
     <Compile Include="Model\VpnServer.cs" />
-    <Compile Include="Model\VPN\WireGuard.cs" />
     <Compile Include="Service\ConfigService.cs" />
     <Compile Include="Service\PluginService.cs" />
     <Compile Include="Service\VpnService.cs" />
