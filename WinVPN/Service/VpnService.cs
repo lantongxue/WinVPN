@@ -12,8 +12,11 @@ namespace WinVPN.Service
 {
     internal class VpnService
     {
-        const string DeviceName = "WinVPN";
+        const string EntryName = "WinVPN";
         const string PhoneBookPath = "winvpn.pbk";
+
+        RasDialer dialer = null;
+        RasConnection connection = null;
 
         public async Task Connect(VpnServer server)
         {
@@ -21,45 +24,52 @@ namespace WinVPN.Service
             {
                 // WireGuard
             }
-            RasDevice winvpn = RasDevice.GetDevices().Where(d => d.Name == DeviceName).FirstOrDefault();
-            if(winvpn == null)
-            {
-                winvpn = RasDevice.Create(DeviceName, RasDeviceType.Vpn);
-            }
-
+            string deviceName = $"({server.Protocol})";
+            RasDevice device = RasDevice.GetDevices().Where(d => d.Name.Contains(deviceName)).FirstOrDefault();
             NetworkCredential credential = new NetworkCredential(server.Username, server.Password);
-
             RasPhoneBook phoneBook = new RasPhoneBook();
             phoneBook.Open(PhoneBookPath);
-            RasEntry entry = phoneBook.Entries.Where(e => e.Name == DeviceName).FirstOrDefault();
+            RasEntry entry = phoneBook.Entries.Where(e => e.Name == EntryName).FirstOrDefault();
             if (entry == null)
             {
-                entry = RasEntry.CreateVpnEntry(DeviceName, server.Address, server.GetRasVpnStrategy(), winvpn);
+                entry = RasEntry.CreateVpnEntry(EntryName, server.Address, server.GetRasVpnStrategy(), device);
                 phoneBook.Entries.Add(entry);
             }
-            entry.Options.PreviewDomain = false;
-            entry.Options.ShowDialingProgress = false;
-            entry.Options.PromoteAlternates = false;
-            entry.Options.DoNotNegotiateMultilink = false;
+            else
+            {
+                entry.PhoneNumber = server.Address;
+                entry.VpnStrategy = server.GetRasVpnStrategy();
+                entry.Device = device;
+            }
             if (server.Protocol == VpnProtocol.L2TP)
             {
                 entry.Options.UsePreSharedKey = true;
                 entry.UpdateCredentials(RasPreSharedKey.Client, server.PreSharedKey);
             }
+
+            entry.Options.PreviewDomain = false;
+            entry.Options.ShowDialingProgress = false;
+            entry.Options.PromoteAlternates = false;
+            entry.Options.DoNotNegotiateMultilink = false;
+
+            //// 手动设置DNS
+            //entry.DnsAddress = IPAddress.Parse("");
+            //entry.DnsAddressAlt = IPAddress.Parse("");
+
             entry.Update();
 
-
-            RasDialer dialer = new RasDialer();
-            dialer.EntryName = DeviceName;
+            dialer = new RasDialer();
+            dialer.Timeout = 3000;
+            dialer.EntryName = EntryName;
             dialer.PhoneBookPath = PhoneBookPath;
             dialer.Credentials = credential;
+            dialer.Error += Dialer_Error;
             dialer.StateChanged += Dialer_StateChanged;
             dialer.DialCompleted += Dialer_DialCompleted;
-            dialer.Error += Dialer_Error;
 
             await Task.Run(() =>
             {
-                dialer.Dial();
+                dialer.DialAsync();
             });
         }
 
@@ -70,7 +80,11 @@ namespace WinVPN.Service
 
         private void Dialer_DialCompleted(object sender, DialCompletedEventArgs e)
         {
-            Trace.WriteLine(e.ToString(), "Dialer_DialCompleted");
+            Trace.WriteLine(e.Connected, "Dialer_DialCompleted");
+            if (e.Connected)
+            {
+                connection = RasConnection.GetActiveConnections().Where(ac => ac.Handle == e.Handle).FirstOrDefault();
+            }
         }
 
         private void Dialer_StateChanged(object sender, StateChangedEventArgs e)
@@ -80,7 +94,7 @@ namespace WinVPN.Service
 
         public void Disconnect()
         {
-
+            dialer.DialAsyncCancel();
         }
     }
 }
