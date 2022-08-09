@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using WinVPN.Model;
 using WinVPN.Service;
@@ -53,6 +54,8 @@ namespace WinVPN.ViewModel
 
         private ObservableCollection<VpnServer> _servers = null;
         public ObservableCollection<VpnServer> Servers => _servers;
+
+        public VpnServer CurrentServer { get; set; }
 
         public ICommand NewVpnServerCommand { get; }
 
@@ -134,12 +137,29 @@ namespace WinVPN.ViewModel
                 }
             };
 
+            Binding connectStateBinding = new Binding("ConnectState");
+            connectStateBinding.Source = vpnService.VpnConnection;
+            StatusBarItem connectStateItem = new StatusBarItem();
+            connectStateItem.SetBinding(StatusBarItem.ContentProperty, connectStateBinding);
+
+            Binding localEndPointBinding = new Binding("LocalEndPoint");
+            localEndPointBinding.Source = vpnService.VpnConnection;
+            StatusBarItem localEndPointItem = new StatusBarItem();
+            localEndPointItem.SetBinding(StatusBarItem.ContentProperty, localEndPointBinding);
+
+            UploadSpeedComponent uploadSpeedComponent = new UploadSpeedComponent();
+            uploadSpeedComponent.DataContext = vpnService.VpnConnection;
+
+            DownloadSpeedComponent downloadSpeedComponent = new DownloadSpeedComponent();
+            downloadSpeedComponent.DataContext = vpnService.VpnConnection;
+
             _statusBarItems = new ObservableCollection<FrameworkElement>()
             {
-                new StatusBarItem()
-                {
-                    Content = "WinVPN",
-                }
+                connectStateItem,
+                localEndPointItem,
+                new Separator(),
+                uploadSpeedComponent,
+                downloadSpeedComponent
             };
 
             foreach (WinVPN_Plugin plugin in Plugins)
@@ -287,7 +307,21 @@ namespace WinVPN.ViewModel
 
         private async Task _connectVpnServer(VpnServer server)
         {
-            await vpnService.Connect(server);
+            if (server.IsConnected)
+            {
+                await vpnService.Disconnect();
+            }
+            else
+            {
+                foreach (VpnServer server2 in _servers)
+                {
+                    if (server2.IsConnected)
+                    {
+                        await vpnService.Disconnect();
+                    }
+                }
+                await vpnService.Connect(server);
+            }
         }
     }
 }

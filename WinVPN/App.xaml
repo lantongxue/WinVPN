@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converter:BytesConverter x:Key="BytesConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

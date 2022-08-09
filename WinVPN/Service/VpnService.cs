@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net;
 using WinVPN.Model;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace WinVPN.Service
 {
@@ -18,9 +20,13 @@ namespace WinVPN.Service
         RasDialer dialer = null;
         RasConnection connection = null;
 
+        public VpnConnection VpnConnection { get; set; } = new VpnConnection();
+
         public async Task Connect(VpnServer server)
         {
-            if(server.Protocol == VpnProtocol.WireGuard)
+            VpnConnection.VpnServer = server;
+
+            if (server.Protocol == VpnProtocol.WireGuard)
             {
                 // WireGuard
             }
@@ -59,13 +65,13 @@ namespace WinVPN.Service
             entry.Update();
 
             dialer = new RasDialer();
-            dialer.Timeout = 3000;
             dialer.EntryName = EntryName;
             dialer.PhoneBookPath = PhoneBookPath;
             dialer.Credentials = credential;
             dialer.Error += Dialer_Error;
             dialer.StateChanged += Dialer_StateChanged;
             dialer.DialCompleted += Dialer_DialCompleted;
+
 
             await Task.Run(() =>
             {
@@ -81,20 +87,66 @@ namespace WinVPN.Service
         private void Dialer_DialCompleted(object sender, DialCompletedEventArgs e)
         {
             Trace.WriteLine(e.Connected, "Dialer_DialCompleted");
+            VpnConnection.VpnServer.IsConnected = e.Connected;
             if (e.Connected)
             {
                 connection = RasConnection.GetActiveConnections().Where(ac => ac.Handle == e.Handle).FirstOrDefault();
+
+                RasIPInfo ip = (RasIPInfo)connection.GetProjectionInfo(RasProjectionType.IP);
+                VpnConnection.LocalEndPoint = ip.IPAddress;
+
+                Task.Factory.StartNew(async () => 
+                {
+                    long u = 0;
+                    long d = 0;
+                    while (true)
+                    {
+                        RasLinkStatistics linkStatistics = connection.GetLinkStatistics();
+
+                        VpnConnection.UploadSpeed = linkStatistics.BytesTransmitted - u;
+                        VpnConnection.DownloadSpeed = linkStatistics.BytesReceived - d;
+
+                        VpnConnection.VpnServer.Traffic = linkStatistics.BytesReceived + linkStatistics.BytesTransmitted;
+
+                        d = linkStatistics.BytesReceived;
+                        u = linkStatistics.BytesTransmitted;
+                        await Task.Delay(1000);
+                    }
+                });
             }
         }
 
         private void Dialer_StateChanged(object sender, StateChangedEventArgs e)
         {
-            Trace.WriteLine(e.State, "Dialer_StateChanged");
+            VpnConnection.ConnectState = e.State.ToString();
+            if(e.ErrorCode > 0)
+            {
+                VpnConnection.ConnectState = e.ErrorMessage;
+            }
+            if(e.State == RasConnectionState.Connected)
+            {
+                VpnConnection.ConnectState = "连接成功";
+            }
         }
 
-        public void Disconnect()
+        public async Task Disconnect()
         {
-            dialer.DialAsyncCancel();
+            await Task.Run(() =>
+            {
+                if (dialer.IsBusy)
+                {
+                    dialer.DialAsyncCancel();
+                }
+                else
+                {
+                    connection.HangUp();
+                }
+                VpnConnection.VpnServer.IsConnected = false;
+                VpnConnection.LocalEndPoint = null;
+                VpnConnection.ConnectState = "WinVPN";
+                VpnConnection.UploadSpeed = 0;
+                VpnConnection.DownloadSpeed = 0;
+            });
         }
     }
 }

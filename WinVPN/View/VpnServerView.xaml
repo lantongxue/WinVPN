@@ -7,7 +7,8 @@
           xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
           mc:Ignorable="d"
           BorderThickness="0"
-          ItemsSource="{Binding Servers}">
+          ItemsSource="{Binding Servers}"
+          SelectedItem="{Binding CurrentServer}">
 
     <ListView.ItemContainerStyle>
         <Style TargetType="ListViewItem"
@@ -54,7 +55,7 @@
                             DisplayMemberBinding="{Binding Delay}" />
             <GridViewColumn Header="数据流量"
                             Width="80"
-                            DisplayMemberBinding="{Binding Traffic}" />
+                            DisplayMemberBinding="{Binding Traffic, Converter={StaticResource BytesConverter}}" />
             <GridViewColumn Header="备注"
                             Width="160"
                             DisplayMemberBinding="{Binding Info}" />
@@ -62,7 +63,7 @@
                             Width="100">
                 <GridViewColumn.CellTemplate>
                     <DataTemplate>
-                        <mah:ToggleSwitch IsOn="{Binding IsConnected}"
+                        <mah:ToggleSwitch IsOn="{Binding IsConnected, Mode=OneWay}"
                                           Command="{Binding DataContext.ConnectAsyncCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                           CommandParameter="{Binding }"
                                           OffContent="断开"

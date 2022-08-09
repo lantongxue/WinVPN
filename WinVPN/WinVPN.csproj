@@ -14,6 +14,21 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -105,8 +120,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converter\BytesConverter.cs" />
     <Compile Include="Converter\InverseBooleanConverter.cs" />
+    <Compile Include="Model\VpnConnection.cs" />
     <Compile Include="ViewModel\VpnServerWindowViewModel.cs" />
+    <Compile Include="View\DownloadSpeedComponent.xaml.cs">
+      <DependentUpon>DownloadSpeedComponent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\L2TP_EditView.xaml.cs">
       <DependentUpon>L2TP_EditView.xaml</DependentUpon>
     </Compile>
@@ -115,6 +135,9 @@
     </Compile>
     <Compile Include="View\PPTP_SSTP_IKEv2_EditView.xaml.cs">
       <DependentUpon>PPTP_SSTP_IKEv2_EditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UploadSpeedComponent.xaml.cs">
+      <DependentUpon>UploadSpeedComponent.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\WireGuardEditView.xaml.cs">
       <DependentUpon>WireGuardEditView.xaml</DependentUpon>
@@ -146,6 +169,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\DownloadSpeedComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\L2TP_EditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -159,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PPTP_SSTP_IKEv2_EditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UploadSpeedComponent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,6 +241,18 @@
       <Project>{C703D32D-262A-44F3-8F8A-A3FF2A516295}</Project>
       <Name>WinVPN.Plugin.SDK</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
