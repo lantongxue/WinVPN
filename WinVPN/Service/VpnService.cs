@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using WinVPN.Model;
 using System.Diagnostics;
+using System.Threading;
 
 namespace WinVPN.Service
 {
@@ -17,6 +18,8 @@ namespace WinVPN.Service
 
         RasDialer dialer = null;
         RasConnection connection = null;
+
+        CancellationTokenSource speedUpdateSource = new CancellationTokenSource();
 
         public VpnConnection VpnConnection { get; set; } = new VpnConnection();
 
@@ -83,7 +86,6 @@ namespace WinVPN.Service
 
         private void Dialer_DialCompleted(object sender, DialCompletedEventArgs e)
         {
-            Trace.WriteLine(e.Connected, "Dialer_DialCompleted");
             VpnConnection.VpnServer.IsConnected = e.Connected;
             if (e.Connected)
             {
@@ -109,7 +111,7 @@ namespace WinVPN.Service
                         u = linkStatistics.BytesTransmitted;
                         await Task.Delay(1000);
                     }
-                });
+                }, speedUpdateSource.Token);
             }
         }
 
@@ -128,6 +130,9 @@ namespace WinVPN.Service
 
         public async Task Disconnect()
         {
+            // 停止流量记录刷新
+            speedUpdateSource.Cancel();
+
             await Task.Run(() =>
             {
                 if (dialer.IsBusy)
