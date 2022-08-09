@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using System.Net;
 using WinVPN.Model;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 
 namespace WinVPN.Service
 {
@@ -71,7 +69,6 @@ namespace WinVPN.Service
             dialer.Error += Dialer_Error;
             dialer.StateChanged += Dialer_StateChanged;
             dialer.DialCompleted += Dialer_DialCompleted;
-
 
             await Task.Run(() =>
             {
