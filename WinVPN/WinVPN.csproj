@@ -139,6 +139,9 @@
     <Compile Include="View\PPTP_SSTP_IKEv2_EditView.xaml.cs">
       <DependentUpon>PPTP_SSTP_IKEv2_EditView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UploadSpeedComponent.xaml.cs">
       <DependentUpon>UploadSpeedComponent.xaml</DependentUpon>
     </Compile>
@@ -189,6 +192,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PPTP_SSTP_IKEv2_EditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15,6 +15,7 @@ namespace WinVPN.Model
         private IPAddress localEndPoint = null;
         private long uploadSpeed = 0;
         private long downloadSpeed = 0;
+        private string linkSpeed = "";
 
         public VpnServer VpnServer 
         { 
@@ -41,6 +42,11 @@ namespace WinVPN.Model
         { 
             get => downloadSpeed; 
             set => SetProperty(ref downloadSpeed, value); 
+        }
+        public string LinkSpeed 
+        { 
+            get => linkSpeed; 
+            set => SetProperty(ref linkSpeed, value); 
         }
     }
 }

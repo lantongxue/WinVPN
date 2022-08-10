@@ -99,7 +99,8 @@ namespace WinVPN.ViewModel
                 },
                 new TabItem()
                 {
-                    Header = "设置"
+                    Header = "设置",
+                    Content = new SettingsView()
                 },
                 new TabItem()
                 {
@@ -142,6 +143,11 @@ namespace WinVPN.ViewModel
             StatusBarItem connectStateItem = new StatusBarItem();
             connectStateItem.SetBinding(StatusBarItem.ContentProperty, connectStateBinding);
 
+            Binding linkSpeedBinding = new Binding("LinkSpeed");
+            linkSpeedBinding.Source = vpnService.VpnConnection;
+            StatusBarItem linkSpeedItem = new StatusBarItem();
+            linkSpeedItem.SetBinding(StatusBarItem.ContentProperty, linkSpeedBinding);
+
             Binding localEndPointBinding = new Binding("LocalEndPoint");
             localEndPointBinding.Source = vpnService.VpnConnection;
             StatusBarItem localEndPointItem = new StatusBarItem();
@@ -157,6 +163,7 @@ namespace WinVPN.ViewModel
             {
                 connectStateItem,
                 localEndPointItem,
+                linkSpeedItem,
                 new Separator(),
                 uploadSpeedComponent,
                 downloadSpeedComponent

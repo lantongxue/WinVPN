@@ -94,13 +94,16 @@ namespace WinVPN.Service
                 RasIPInfo ip = (RasIPInfo)connection.GetProjectionInfo(RasProjectionType.IP);
                 VpnConnection.LocalEndPoint = ip.IPAddress;
 
+                RasLinkStatistics linkStatistics = connection.GetLinkStatistics();
+                VpnConnection.LinkSpeed = $"链接速度：{linkStatistics.LinkSpeed / 1000 / 1000}MB";
+
                 Task.Factory.StartNew(async () => 
                 {
                     long u = 0;
                     long d = 0;
                     while (true && !trafficTokenSource.IsCancellationRequested)
                     {
-                        RasLinkStatistics linkStatistics = connection.GetLinkStatistics();
+                        linkStatistics = connection.GetLinkStatistics();
 
                         VpnConnection.UploadSpeed = linkStatistics.BytesTransmitted - u;
                         VpnConnection.DownloadSpeed = linkStatistics.BytesReceived - d;
@@ -148,6 +151,7 @@ namespace WinVPN.Service
                 VpnConnection.ConnectState = "WinVPN";
                 VpnConnection.UploadSpeed = 0;
                 VpnConnection.DownloadSpeed = 0;
+                VpnConnection.LinkSpeed = "";
             });
         }
     }
