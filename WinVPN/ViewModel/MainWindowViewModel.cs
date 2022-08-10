@@ -320,6 +320,7 @@ namespace WinVPN.ViewModel
                         await vpnService.Disconnect();
                     }
                 }
+                await server.PingAsync();
                 await vpnService.Connect(server);
             }
         }

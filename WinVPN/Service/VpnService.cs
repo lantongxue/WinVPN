@@ -130,11 +130,11 @@ namespace WinVPN.Service
 
         public async Task Disconnect()
         {
-            // 停止流量记录刷新
-            speedUpdateSource.Cancel();
-
             await Task.Run(() =>
             {
+                // 停止流量记录刷新
+                speedUpdateSource.Cancel();
+
                 if (dialer.IsBusy)
                 {
                     dialer.DialAsyncCancel();
