@@ -19,7 +19,7 @@ namespace WinVPN.Service
         RasDialer dialer = null;
         RasConnection connection = null;
 
-        CancellationTokenSource speedUpdateSource = new CancellationTokenSource();
+        CancellationTokenSource trafficTokenSource = new CancellationTokenSource();
 
         public VpnConnection VpnConnection { get; set; } = new VpnConnection();
 
@@ -98,7 +98,7 @@ namespace WinVPN.Service
                 {
                     long u = 0;
                     long d = 0;
-                    while (true)
+                    while (true && !trafficTokenSource.IsCancellationRequested)
                     {
                         RasLinkStatistics linkStatistics = connection.GetLinkStatistics();
 
@@ -111,7 +111,7 @@ namespace WinVPN.Service
                         u = linkStatistics.BytesTransmitted;
                         await Task.Delay(1000);
                     }
-                }, speedUpdateSource.Token);
+                }, trafficTokenSource.Token);
             }
         }
 
@@ -133,7 +133,7 @@ namespace WinVPN.Service
             await Task.Run(() =>
             {
                 // 停止流量记录刷新
-                speedUpdateSource.Cancel();
+                trafficTokenSource.Cancel();
 
                 if (dialer.IsBusy)
                 {
