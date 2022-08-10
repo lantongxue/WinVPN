@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Windows.Controls;
 using System.Collections;
 using WinVPN.Plugin.SDK;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
