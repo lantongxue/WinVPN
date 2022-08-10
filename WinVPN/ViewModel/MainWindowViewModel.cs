@@ -16,6 +16,8 @@ using System.Windows.Input;
 using WinVPN.Model;
 using WinVPN.Service;
 using WinVPN.View;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace WinVPN.ViewModel
 {
@@ -53,9 +55,11 @@ namespace WinVPN.ViewModel
         public Version MainVersion => Assembly.GetEntryAssembly().GetName().Version;
 
         private ObservableCollection<VpnServer> _servers = null;
+        private VpnServer currentServer;
+
         public ObservableCollection<VpnServer> Servers => _servers;
 
-        public VpnServer CurrentServer { get; set; }
+        public VpnServer CurrentServer { get => currentServer; set => SetProperty(ref currentServer, value); }
 
         public ICommand NewVpnServerCommand { get; }
 
@@ -171,7 +175,7 @@ namespace WinVPN.ViewModel
 
             foreach (WinVPN_Plugin plugin in Plugins)
             {
-                if(plugin.IsOn)
+                if (plugin.IsOn)
                 {
                     _createPluginUIItems(plugin);
                 }
@@ -301,12 +305,13 @@ namespace WinVPN.ViewModel
 
         private async Task _pingVpnServer(VpnServer server)
         {
+            CurrentServer = server;
             await server.PingAsync();
         }
 
         private async Task _pingVpnServers()
         {
-            foreach(VpnServer server in _servers)
+            foreach (VpnServer server in _servers)
             {
                 await server.PingAsync();
             }
@@ -314,9 +319,10 @@ namespace WinVPN.ViewModel
 
         private async Task _connectVpnServer(VpnServer server)
         {
+            CurrentServer = server;
             if (server.IsConnected)
             {
-                await vpnService.Disconnect();
+                vpnService.Disconnect();
             }
             else
             {
@@ -324,11 +330,11 @@ namespace WinVPN.ViewModel
                 {
                     if (server2.IsConnected)
                     {
-                        await vpnService.Disconnect();
+                        vpnService.Disconnect();
                     }
                 }
                 await server.PingAsync();
-                await vpnService.Connect(server);
+                vpnService.Connect(server);
             }
         }
     }

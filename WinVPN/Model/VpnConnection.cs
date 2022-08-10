@@ -16,6 +16,7 @@ namespace WinVPN.Model
         private long uploadSpeed = 0;
         private long downloadSpeed = 0;
         private string linkSpeed = "";
+        private string errorMessage = "";
 
         public VpnServer VpnServer 
         { 
@@ -47,6 +48,11 @@ namespace WinVPN.Model
         { 
             get => linkSpeed; 
             set => SetProperty(ref linkSpeed, value); 
+        }
+        public string ErrorMessage 
+        { 
+            get => errorMessage; 
+            set => SetProperty(ref errorMessage, value);
         }
     }
 }

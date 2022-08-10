@@ -8,7 +8,8 @@
           mc:Ignorable="d"
           BorderThickness="0"
           ItemsSource="{Binding Servers}"
-          SelectedItem="{Binding CurrentServer}">
+          SelectedItem="{Binding CurrentServer}"
+          IsEnabled="{Binding CurrentServer.IsConnecting, Converter={StaticResource InverseBooleanConverter}}">
 
     <ListView.ItemContainerStyle>
         <Style TargetType="ListViewItem"

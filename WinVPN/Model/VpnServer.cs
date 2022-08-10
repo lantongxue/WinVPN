@@ -23,6 +23,7 @@ namespace WinVPN.Model
         private string source = "";
         private long traffic = 0;
         private bool isConnected = false;
+        private bool isConnecting = false;
         private string preSharedKey = "";
 
         public string Id 
@@ -84,6 +85,11 @@ namespace WinVPN.Model
         {
             get => preSharedKey;
             set => SetProperty(ref preSharedKey, value);
+        }
+        public bool IsConnecting 
+        { 
+            get => isConnecting;
+            set => SetProperty(ref isConnecting, value);
         }
 
         public VpnServer()
