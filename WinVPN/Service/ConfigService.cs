@@ -98,8 +98,8 @@ namespace WinVPN.Service
             {
                 VpnServer server = JsonConvert.DeserializeObject<VpnServer>(Encoding.UTF8.GetString(Convert.FromBase64String(node.InnerText)));
                 server.Delay = "";
+                server.Traffic = 0;
                 list.Add(server);
-
             }
             return list;
         }
