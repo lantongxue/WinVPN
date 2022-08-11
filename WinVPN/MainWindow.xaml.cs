@@ -27,7 +27,6 @@ namespace WinVPN
         public MainWindow()
         {
             InitializeComponent();
-
             DataContext = Ioc.Default.GetRequiredService<MainWindowViewModel>();
         }
         internal MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;

@@ -17,7 +17,6 @@ using WinVPN.Model;
 using WinVPN.Service;
 using WinVPN.View;
 using MahApps.Metro.Controls.Dialogs;
-using MahApps.Metro.Controls;
 
 namespace WinVPN.ViewModel
 {
@@ -26,6 +25,7 @@ namespace WinVPN.ViewModel
         private PluginService pluginService = Ioc.Default.GetRequiredService<PluginService>();
         private ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
         private VpnService vpnService = Ioc.Default.GetRequiredService<VpnService>();
+
 
         public ICommand ShowPluginSettingsCommand { get; }
 
@@ -73,8 +73,11 @@ namespace WinVPN.ViewModel
 
         public IAsyncRelayCommand ConnectAsyncCommand { get; }
 
+        private readonly IDialogCoordinator _dialogCoordinator;
         public MainWindowViewModel()
         {
+            this._dialogCoordinator = new DialogCoordinator();
+
             ShowPluginSettingsCommand = new RelayCommand<WinVPN_Plugin>(_showPluginSettings);
             PluginEnableCommand = new RelayCommand<WinVPN_Plugin>(_pluginEnable);
             NewVpnServerCommand = new RelayCommand(_newVpnServer);
@@ -334,6 +337,31 @@ namespace WinVPN.ViewModel
                     }
                 }
                 await server.PingAsync();
+                var controller = await this._dialogCoordinator.ShowProgressAsync(this, "连接中...", "");
+                controller.Canceled += async (a, b) =>
+                {
+                    await controller.CloseAsync();
+                };
+                controller.SetIndeterminate();
+
+                vpnService.ConnectionStateChanged += async (a, b) =>
+                {
+                    vpnService.VpnConnection.ConnectState = "连接中...";
+                    string message = b.ErrorCode > 0 ? b.ErrorMessage : b.State.ToString();
+                    controller.SetMessage(message);
+                    if(b.State == DotRas.RasConnectionState.Connected && controller.IsOpen)
+                    {
+                        vpnService.VpnConnection.ConnectState = "连接成功";
+                        await controller.CloseAsync();
+                    }
+                    if(b.ErrorCode > 0)
+                    {
+                        vpnService.VpnConnection.ConnectState = "连接失败";
+                        controller.SetTitle("错误：" + b.ErrorCode.ToString());
+                        controller.SetProgress(1);
+                        controller.SetCancelable(true);
+                    }
+                };
                 vpnService.Connect(server);
             }
         }

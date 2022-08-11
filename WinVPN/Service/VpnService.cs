@@ -23,6 +23,8 @@ namespace WinVPN.Service
 
         public VpnConnection VpnConnection { get; set; } = new VpnConnection();
 
+        public event EventHandler<StateChangedEventArgs> ConnectionStateChanged;
+
         public void Connect(VpnServer server)
         {
             VpnConnection.VpnServer = server;
@@ -123,16 +125,10 @@ namespace WinVPN.Service
 
         private void Dialer_StateChanged(object sender, StateChangedEventArgs e)
         {
-            VpnConnection.ConnectState = e.State.ToString();
+            ConnectionStateChanged?.Invoke(this, e);
             if(e.ErrorCode > 0)
             {
-                VpnConnection.ConnectState = "连接失败";
-                VpnConnection.ErrorMessage = $"[{e.ErrorCode}]{e.ErrorMessage}";
                 this.Disconnect(false);
-            }
-            if(e.State == RasConnectionState.Connected)
-            {
-                VpnConnection.ConnectState = "连接成功";
             }
         }
 

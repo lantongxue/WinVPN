@@ -10,6 +10,7 @@
                  TitleCharacterCasing="Normal"
                  Height="450"
                  Width="800"
+                 mah:DialogParticipation.Register="{Binding}"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                  NonActiveGlowBrush="#CDFF0000"
                  WindowStartupLocation="CenterScreen">
