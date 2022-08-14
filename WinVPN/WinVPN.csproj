@@ -125,6 +125,7 @@
     </ApplicationDefinition>
     <Compile Include="Converter\BytesConverter.cs" />
     <Compile Include="Converter\InverseBooleanConverter.cs" />
+    <Compile Include="Model\AppConfig.cs" />
     <Compile Include="Model\VpnConnection.cs" />
     <Compile Include="ViewModel\VpnServerWindowViewModel.cs" />
     <Compile Include="View\DownloadSpeedComponent.xaml.cs">
