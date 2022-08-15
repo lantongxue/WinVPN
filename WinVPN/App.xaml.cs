@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.UI;
 using System.Windows;
+using WinVPN.Model;
 using WinVPN.Service;
 using WinVPN.ViewModel;
 
@@ -28,6 +29,7 @@ namespace WinVPN
                 .AddSingleton<ConfigService>()
                 .AddSingleton<VpnService>()
                 .AddSingleton<MainWindowViewModel>()
+                .AddSingleton<AppConfig>()
                 .AddTransient<VpnServerWindowViewModel>()
                 .BuildServiceProvider();
 

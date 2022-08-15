@@ -7,6 +7,8 @@ using System.IO;
 using WinVPN.Model;
 using System.Xml;
 using Newtonsoft.Json;
+using System.Net;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace WinVPN.Service
 {
@@ -16,6 +18,7 @@ namespace WinVPN.Service
         XmlDocument xmlDoc = new XmlDocument();
         XmlElement plugins = null;
         XmlElement servers = null;
+        XmlElement appconfig = null;
 
         public ConfigService()
         {
@@ -32,6 +35,50 @@ namespace WinVPN.Service
                 servers = xmlDoc.CreateElement("servers");
                 xmlDoc.DocumentElement.AppendChild(servers);
             }
+
+            appconfig = xmlDoc.DocumentElement["appconfig"];
+            if (appconfig == null)
+            {
+                appconfig = xmlDoc.CreateElement("appconfig");
+                xmlDoc.DocumentElement.AppendChild(appconfig);
+            }
+        }
+
+        public AppConfig GetAppConfig()
+        {
+            AppConfig config = Ioc.Default.GetRequiredService<AppConfig>();
+            XmlNode dns = appconfig.SelectSingleNode("dns");
+            config.Dns1 = dns?.Attributes["dns1"].Value;
+            config.Dns2 = dns?.Attributes["dns2"].Value;
+            config.DnsList = new List<CustomDns>();
+
+            foreach(XmlNode node in xmlDoc.DocumentElement["dnslist"].SelectNodes("dns"))
+            {
+                IPAddress.TryParse(node.Attributes["dns1"].Value, out IPAddress dns1);
+                IPAddress.TryParse(node.Attributes["dns2"].Value, out IPAddress dns2);
+                config.DnsList.Add(new CustomDns()
+                {
+                    Name = node.Attributes["name"].Value,
+                    Dns1 = dns1,
+                    Dns2 = dns2,
+                });
+            }
+
+            return config;
+        }
+
+        public void UpdateAppConfig(AppConfig config)
+        {
+            XmlElement dns = (XmlElement)appconfig.SelectSingleNode("dns");
+            if(dns == null)
+            {
+                dns = xmlDoc.CreateElement("dns");
+                appconfig.AppendChild(dns);
+            }
+            dns.SetAttribute("dns1", config.Dns1);
+            dns.SetAttribute("dns2", config.Dns2);
+
+            Save();
         }
 
         public bool? GetPlugin(string pluginName)

@@ -8,6 +8,7 @@ using System.Net;
 using WinVPN.Model;
 using System.Diagnostics;
 using System.Threading;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace WinVPN.Service
 {
@@ -20,6 +21,8 @@ namespace WinVPN.Service
         RasConnection connection = null;
 
         CancellationTokenSource trafficTokenSource = new CancellationTokenSource();
+
+        AppConfig _appconfig = Ioc.Default.GetRequiredService<AppConfig>();
 
         public VpnConnection VpnConnection { get; set; } = new VpnConnection();
 
@@ -63,9 +66,15 @@ namespace WinVPN.Service
                 entry.Options.PromoteAlternates = false;
                 entry.Options.DoNotNegotiateMultilink = false;
 
-                //// 手动设置DNS
-                //entry.DnsAddress = IPAddress.Parse("");
-                //entry.DnsAddressAlt = IPAddress.Parse("");
+                // 手动设置DNS
+                if (IPAddress.TryParse(_appconfig.Dns1, out IPAddress dns1))
+                {
+                    entry.DnsAddress = dns1;
+                }
+                if (IPAddress.TryParse(_appconfig.Dns2, out IPAddress dns2))
+                {
+                    entry.DnsAddressAlt = dns2;
+                }
 
                 entry.Update();
 

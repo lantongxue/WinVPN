@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,5 +23,16 @@ namespace WinVPN.Model
             get => dns2; 
             set => SetProperty(ref dns2, value); 
         }
+
+        public List<CustomDns> DnsList { get; set; }
+    }
+
+    public class CustomDns
+    {
+        public string Name { get; set; }
+
+        public IPAddress Dns1 { get; set; }
+
+        public IPAddress Dns2 { get; set; }
     }
 }

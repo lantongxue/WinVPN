@@ -74,6 +74,14 @@ namespace WinVPN.ViewModel
         public IAsyncRelayCommand ConnectAsyncCommand { get; }
 
         private readonly IDialogCoordinator _dialogCoordinator;
+
+        private AppConfig _appconfig = Ioc.Default.GetRequiredService<AppConfig>();
+        public AppConfig AppConfig
+        {
+            get => _appconfig;
+            set => _appconfig = value;
+        }
+
         public MainWindowViewModel()
         {
             this._dialogCoordinator = new DialogCoordinator();
@@ -88,6 +96,8 @@ namespace WinVPN.ViewModel
             ConnectAsyncCommand = new AsyncRelayCommand<VpnServer>(_connectVpnServer);
 
             _servers = new ObservableCollection<VpnServer>(configService.GetServers());
+
+            AppConfig = configService.GetAppConfig();
 
             _initPluginUIItems();
         }
