@@ -1,27 +1,26 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinVPN.Model
+namespace WinVPN.Base
 {
-    public class AppConfig : ObservableObject
+    public class Config
     {
         private string dns1 = "";
         private string dns2 = "";
 
         public string Dns1
         { 
-            get => dns1; 
-            set => SetProperty(ref dns1, value); 
+            get => dns1;
+            set => dns1 = value; 
         }
         public string Dns2 
         { 
             get => dns2; 
-            set => SetProperty(ref dns2, value); 
+            set => dns2 = value; 
         }
 
         public List<CustomDns> DnsList { get; set; }

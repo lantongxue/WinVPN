@@ -15,6 +15,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,8 +31,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -123,10 +123,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Base\BaseServer.cs" />
+    <Compile Include="Base\Protocol.cs" />
     <Compile Include="Converter\BytesConverter.cs" />
     <Compile Include="Converter\InverseBooleanConverter.cs" />
-    <Compile Include="Model\AppConfig.cs" />
-    <Compile Include="Model\VpnConnection.cs" />
+    <Compile Include="Base\Config.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Interface\IServer.cs" />
     <Compile Include="ViewModel\VpnServerWindowViewModel.cs" />
     <Compile Include="View\DownloadSpeedComponent.xaml.cs">
       <DependentUpon>DownloadSpeedComponent.xaml</DependentUpon>
@@ -149,11 +152,14 @@
     <Compile Include="View\WireGuardEditView.xaml.cs">
       <DependentUpon>WireGuardEditView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VPN\ConnectionExtension.cs" />
+    <Compile Include="VPN\WireGuard.cs" />
+    <Compile Include="VPN\IKEv2.cs" />
+    <Compile Include="VPN\SSTP.cs" />
+    <Compile Include="VPN\L2TP.cs" />
+    <Compile Include="VPN\PPTP.cs" />
     <Compile Include="WinVPN_Plugin.cs" />
-    <Compile Include="Model\VpnServer.cs" />
-    <Compile Include="Service\ConfigService.cs" />
     <Compile Include="Service\PluginService.cs" />
-    <Compile Include="Service\VpnService.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="View\PluginView.xaml.cs">
       <DependentUpon>PluginView.xaml</DependentUpon>
@@ -161,8 +167,8 @@
     <Compile Include="View\VpnServerView.xaml.cs">
       <DependentUpon>VpnServerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\VpnServerWindow.xaml.cs">
-      <DependentUpon>VpnServerWindow.xaml</DependentUpon>
+    <Compile Include="View\VpnServerEditWindow.xaml.cs">
+      <DependentUpon>VpnServerEditWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -208,7 +214,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\VpnServerWindow.xaml">
+    <Page Include="View\VpnServerEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -235,13 +241,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="dns.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="WinVPN.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +271,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\CommunityToolkit.Mvvm.8.0.0\build\netstandard2.0\CommunityToolkit.Mvvm.targets" Condition="Exists('..\packages\CommunityToolkit.Mvvm.8.0.0\build\netstandard2.0\CommunityToolkit.Mvvm.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

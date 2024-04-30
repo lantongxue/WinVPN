@@ -13,18 +13,17 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
-using WinVPN.Model;
+using WinVPN.Base;
 using WinVPN.Service;
 using WinVPN.View;
 using MahApps.Metro.Controls.Dialogs;
+using WinVPN.VPN;
 
 namespace WinVPN.ViewModel
 {
     internal class MainWindowViewModel : ObservableObject
     {
         private PluginService pluginService = Ioc.Default.GetRequiredService<PluginService>();
-        private ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
-        private VpnService vpnService = Ioc.Default.GetRequiredService<VpnService>();
 
 
         public ICommand ShowPluginSettingsCommand { get; }
@@ -54,12 +53,26 @@ namespace WinVPN.ViewModel
 
         public Version MainVersion => Assembly.GetEntryAssembly().GetName().Version;
 
-        private ObservableCollection<VpnServer> _servers = null;
-        private VpnServer currentServer;
+        private ObservableCollection<BaseServer> _servers = new ObservableCollection<BaseServer>()
+        {
+            new L2TP()
+            {
+                Name = "106.52.15.115",
+                Address = "106.52.15.115",
+                Username = "vpnuser",
+                Password = "CyZjynJNpLWAx6Bs",
+                PreSharedKey = "7ckxNbaCDxfgeNbyDUvi"
+            }
+        };
+        private BaseServer currentServer = new BaseServer();
 
-        public ObservableCollection<VpnServer> Servers => _servers;
+        public ObservableCollection<BaseServer> Servers
+        {
+            get => _servers;
+            set => _servers = value;
+        }
 
-        public VpnServer CurrentServer { get => currentServer; set => SetProperty(ref currentServer, value); }
+        public BaseServer CurrentServer { get => currentServer; set => SetProperty(ref currentServer, value); }
 
         public ICommand NewVpnServerCommand { get; }
 
@@ -75,13 +88,6 @@ namespace WinVPN.ViewModel
 
         private readonly IDialogCoordinator _dialogCoordinator;
 
-        private AppConfig _appconfig = Ioc.Default.GetRequiredService<AppConfig>();
-        public AppConfig AppConfig
-        {
-            get => _appconfig;
-            set => _appconfig = value;
-        }
-
         public MainWindowViewModel()
         {
             this._dialogCoordinator = new DialogCoordinator();
@@ -89,15 +95,14 @@ namespace WinVPN.ViewModel
             ShowPluginSettingsCommand = new RelayCommand<WinVPN_Plugin>(_showPluginSettings);
             PluginEnableCommand = new RelayCommand<WinVPN_Plugin>(_pluginEnable);
             NewVpnServerCommand = new RelayCommand(_newVpnServer);
-            EditVpnServerCommand = new RelayCommand<VpnServer>(_editVpnServer);
-            DeleteVpnServerCommand = new RelayCommand<VpnServer>(_deleteVpnServer);
-            PingAsyncCommand = new AsyncRelayCommand<VpnServer>(_pingVpnServer);
+            EditVpnServerCommand = new RelayCommand<BaseServer>(_editVpnServer);
+            DeleteVpnServerCommand = new RelayCommand<BaseServer>(_deleteVpnServer);
+            PingAsyncCommand = new AsyncRelayCommand<BaseServer>(_pingVpnServer);
             PingServersAsyncCommand = new AsyncRelayCommand(_pingVpnServers);
-            ConnectAsyncCommand = new AsyncRelayCommand<VpnServer>(_connectVpnServer);
+            ConnectAsyncCommand = new AsyncRelayCommand<BaseServer>(_connectVpnServer);
 
-            _servers = new ObservableCollection<VpnServer>(configService.GetServers());
+            //_servers = new ObservableCollection<BaseServer>(configService.GetServers());
 
-            AppConfig = configService.GetAppConfig();
 
             _initPluginUIItems();
         }
@@ -156,25 +161,25 @@ namespace WinVPN.ViewModel
             };
 
             Binding connectStateBinding = new Binding("ConnectState");
-            connectStateBinding.Source = vpnService.VpnConnection;
+            connectStateBinding.Source = CurrentServer;
             StatusBarItem connectStateItem = new StatusBarItem();
             connectStateItem.SetBinding(StatusBarItem.ContentProperty, connectStateBinding);
 
             Binding linkSpeedBinding = new Binding("LinkSpeed");
-            linkSpeedBinding.Source = vpnService.VpnConnection;
+            linkSpeedBinding.Source = CurrentServer;
             StatusBarItem linkSpeedItem = new StatusBarItem();
             linkSpeedItem.SetBinding(StatusBarItem.ContentProperty, linkSpeedBinding);
 
             Binding localEndPointBinding = new Binding("LocalEndPoint");
-            localEndPointBinding.Source = vpnService.VpnConnection;
+            localEndPointBinding.Source = CurrentServer;
             StatusBarItem localEndPointItem = new StatusBarItem();
             localEndPointItem.SetBinding(StatusBarItem.ContentProperty, localEndPointBinding);
 
             UploadSpeedComponent uploadSpeedComponent = new UploadSpeedComponent();
-            uploadSpeedComponent.DataContext = vpnService.VpnConnection;
+            uploadSpeedComponent.DataContext = CurrentServer;
 
             DownloadSpeedComponent downloadSpeedComponent = new DownloadSpeedComponent();
-            downloadSpeedComponent.DataContext = vpnService.VpnConnection;
+            downloadSpeedComponent.DataContext = CurrentServer;
 
             _statusBarItems = new ObservableCollection<FrameworkElement>()
             {
@@ -278,7 +283,7 @@ namespace WinVPN.ViewModel
             {
                 plugin.IsEnabled = false;
                 plugin.IsOn = false;
-                MessageBox.Show("请升级主程序后再使用该插件！", "启用失败！", MessageBoxButton.OK, MessageBoxImage.Error);
+                this._dialogCoordinator.ShowMessageAsync(this, "请升级主程序后再使用该插件！", "启用失败！");
                 return;
             }
             pluginService.UpdatePluginConfig(plugin);
@@ -301,7 +306,7 @@ namespace WinVPN.ViewModel
             window.ShowDialog();
         }
 
-        private void _editVpnServer(VpnServer server)
+        private void _editVpnServer(BaseServer server)
         {
             VpnServerWindow window = new VpnServerWindow("编辑服务器", server);
             window.Owner = Application.Current.MainWindow;
@@ -309,14 +314,12 @@ namespace WinVPN.ViewModel
             window.ShowDialog();
         }
 
-        private void _deleteVpnServer(VpnServer server)
+        private void _deleteVpnServer(BaseServer server)
         {
-            configService.DeleteServer(server.Id);
-            configService.Save();
             _servers.Remove(server);
         }
 
-        private async Task _pingVpnServer(VpnServer server)
+        private async Task _pingVpnServer(BaseServer server)
         {
             CurrentServer = server;
             await server.PingAsync();
@@ -324,56 +327,48 @@ namespace WinVPN.ViewModel
 
         private async Task _pingVpnServers()
         {
-            foreach (VpnServer server in _servers)
+            foreach (BaseServer server in _servers)
             {
                 await server.PingAsync();
             }
         }
 
-        private async Task _connectVpnServer(VpnServer server)
+        private async Task _connectVpnServer(BaseServer server)
         {
-            CurrentServer = server;
-            if (server.IsConnected)
+            foreach (BaseServer server2 in _servers)
             {
-                vpnService.Disconnect();
-            }
-            else
-            {
-                foreach (VpnServer server2 in _servers)
+                if (server2.IsConnected)
                 {
-                    if (server2.IsConnected)
-                    {
-                        vpnService.Disconnect();
-                    }
+                    server2.Disconnect();
                 }
-                await server.PingAsync();
-                var controller = await this._dialogCoordinator.ShowProgressAsync(this, "连接中...", "");
-                controller.Canceled += async (a, b) =>
-                {
-                    await controller.CloseAsync();
-                };
-                controller.SetIndeterminate();
-
-                vpnService.ConnectionStateChanged += async (a, b) =>
-                {
-                    vpnService.VpnConnection.ConnectState = "连接中...";
-                    string message = b.ErrorCode > 0 ? b.ErrorMessage : b.State.ToString();
-                    controller.SetMessage(message);
-                    if(b.State == DotRas.RasConnectionState.Connected && controller.IsOpen)
-                    {
-                        vpnService.VpnConnection.ConnectState = "连接成功";
-                        await controller.CloseAsync();
-                    }
-                    if(b.ErrorCode > 0)
-                    {
-                        vpnService.VpnConnection.ConnectState = "连接失败";
-                        controller.SetTitle("错误：" + b.ErrorCode.ToString());
-                        controller.SetProgress(1);
-                        controller.SetCancelable(true);
-                    }
-                };
-                vpnService.Connect(server);
             }
+            await server.PingAsync();
+            var controller = await _dialogCoordinator.ShowProgressAsync(this, "连接中...", "");
+            controller.Canceled += async (a, b) =>
+            {
+                await controller.CloseAsync();
+            };
+            controller.SetIndeterminate();
+
+            server.ConnectionStateChanged += async (a, b) =>
+            {
+                server.ConnectState = "连接中...";
+                string message = b.ErrorCode > 0 ? b.ErrorMessage : b.State.ToString();
+                controller.SetMessage(message);
+                if (b.State == DotRas.RasConnectionState.Connected && controller.IsOpen)
+                {
+                    CurrentServer.ConnectState = "连接成功";
+                    await controller.CloseAsync();
+                }
+                if (b.ErrorCode > 0)
+                {
+                    server.ConnectState = "连接失败";
+                    controller.SetTitle("错误：" + b.ErrorCode.ToString());
+                    controller.SetProgress(1);
+                    controller.SetCancelable(true);
+                }
+            };
+            server.Connect();
         }
     }
 }

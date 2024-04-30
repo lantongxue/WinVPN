@@ -14,9 +14,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WinVPN.Model;
+using WinVPN.Base;
 using WinVPN.Service;
 using WinVPN.ViewModel;
+using WinVPN.VPN;
 
 namespace WinVPN.View
 {
@@ -41,8 +42,8 @@ namespace WinVPN.View
             DataContext = Ioc.Default.GetRequiredService<VpnServerWindowViewModel>();
         }
 
-        VpnServer _server = null;
-        public VpnServerWindow(string title, VpnServer server)
+        BaseServer _server = null;
+        public VpnServerWindow(string title, BaseServer server)
         {
             InitializeComponent();
 
@@ -54,30 +55,29 @@ namespace WinVPN.View
 
         internal VpnServerWindowViewModel ViewModel => (VpnServerWindowViewModel)DataContext;
 
-        private ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
-
         private void Protocol_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ViewModel.Server = _server ?? new VpnServer();
-            VpnProtocol val = (VpnProtocol)(sender as ComboBox).SelectedValue;
+            ViewModel.Server = _server ?? new BaseServer();
+            Protocol val = (Protocol)(sender as ComboBox).SelectedValue;
             switch (val)
             {
-                case VpnProtocol.PPTP:
+                case Protocol.PPTP:
                     contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
                     break;
-                case VpnProtocol.SSTP:
+                case Protocol.SSTP:
                     contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
                     break;
-                case VpnProtocol.IKEv2:
+                case Protocol.IKEv2:
                     contentControl.Content = new PPTP_SSTP_IKEv2_EditView();
                     break;
-                case VpnProtocol.L2TP:
+                case Protocol.L2TP:
+                    ViewModel.Server = _server ?? new L2TP();
                     contentControl.Content = new L2TP_EditView();
                     break;
-                case VpnProtocol.OpenVPN:
+                case Protocol.OpenVPN:
                     contentControl.Content = new OpenVPN_EditView();
                     break;
-                case VpnProtocol.WireGuard:
+                case Protocol.WireGuard:
                     contentControl.Content = new WireGuardEditView();
                     break;
             }
@@ -101,14 +101,11 @@ namespace WinVPN.View
 
             if (_server != null)
             {
-                configService.UpdateServer(_server.Id, server);
             }
             else
             {
-                configService.AddServer(server);
                 MainWindowViewModel.Servers.Add(server);
             }
-            configService.Save();
 
             this.Close();
         }

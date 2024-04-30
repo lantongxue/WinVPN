@@ -20,7 +20,7 @@ namespace WinVPN.Service
 
         Dictionary<string, WinVPN_Plugin> _plugins = new Dictionary<string, WinVPN_Plugin>();
 
-        ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
+        //ConfigService configService = Ioc.Default.GetRequiredService<ConfigService>();
 
         Version MainVersion = Assembly.GetEntryAssembly().GetName().Version;
 
@@ -70,21 +70,21 @@ namespace WinVPN.Service
                         };
                         _plugin.IsOn = _plugin.IsEnabled;
 
-                        bool? isEnabled = configService.GetPlugin(exp.FullName);
-                        if (isEnabled == null)
-                        {
-                            configService.AddPlugin(exp.FullName, _plugin.IsOn);
-                        }
-                        else
-                        {
-                            _plugin.IsOn = isEnabled.Value;
-                        }
+                        //bool? isEnabled = configService.GetPlugin(exp.FullName);
+                        //if (isEnabled == null)
+                        //{
+                        //    configService.AddPlugin(exp.FullName, _plugin.IsOn);
+                        //}
+                        //else
+                        //{
+                        //    _plugin.IsOn = isEnabled.Value;
+                        //}
 
                         _plugins.Add(exp.FullName, _plugin);
                         break;
                     }
                 }
-                configService.Save();
+                //configService.Save();
             }
             catch
             {
@@ -94,8 +94,8 @@ namespace WinVPN.Service
 
         public void UpdatePluginConfig(WinVPN_Plugin plugin)
         {
-            configService.SetPlugin(plugin.Name, plugin.IsOn);
-            configService.Save();
+            //configService.SetPlugin(plugin.Name, plugin.IsOn);
+            //configService.Save();
         }
 
         public Dictionary<string, WinVPN_Plugin> GetPlugins()
